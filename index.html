@@ -1,0 +1,935 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Saad Gulzar - University of Notre Dame</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://kit.fontawesome.com/c353c259e6.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+
+        /* ABSTRACT ARROW STYLE */
+        .abstract-icon {
+            color: #ccc;
+            font-size: 12px;
+            margin-left: 8px;
+            cursor: pointer;
+            transition: color 0.2s, transform 0.2s;
+        }
+        .abstract-icon:hover {
+            color: var(--nd-gold);
+        }
+        /* Rotates arrow when open */
+        .abstract-icon.open {
+            transform: rotate(180deg); 
+            color: var(--nd-gold);
+        }
+        
+        /* === NEW POLICY BADGES === */
+        .type-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 3px 8px;
+            border-radius: 2px;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+        .bg-paper { background-color: var(--nd-blue); }
+        .bg-report { background-color: var(--nd-gold); }
+        .bg-brief { background-color: #666; }
+        
+        
+        /* === GLOBAL VARIABLES & RESET === */
+        :root { --nd-blue: #002b5c; --nd-gold: #c99700; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Lato', sans-serif; color: #333; background-color: #fff; line-height: 1.4; font-size: 15px; }
+        a { color: var(--nd-blue); text-decoration: none; transition: color 0.2s; }
+        a:hover { color: var(--nd-gold); }
+
+        /* === BANNER === */
+        .banner-section { 
+            background-image: url('img/banner.jpg'); /* ENSURE THIS FILE EXISTS */
+            background-size: cover;
+            background-position: center;
+            padding: 40px 0; /* Reduced padding */
+            border-bottom: 4px solid var(--nd-blue);
+            color: #333;
+        }
+        .profile-box {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 2px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .profile-img { width: 140px; height: auto; border-radius: 2px; border: 1px solid #ddd; }
+        h1 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; margin-bottom: 5px; color: #111; }
+        .designation { font-family: 'Playfair Display', serif; font-size: 16px; color: #555; margin-bottom: 15px; border-left: 3px solid var(--nd-gold); padding-left: 12px; }
+        .icon-row a { margin-right: 15px; font-weight: 600; font-size: 13px; }
+
+        /* === STICKY NAVIGATION === */
+        .sticky-nav { 
+            position: sticky; top: 0; background: #fff; z-index: 1000; 
+            border-bottom: 1px solid #ddd; padding: 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .nav-link { color: #555; font-weight: 700; text-transform: uppercase; font-size: 13px; letter-spacing: 1px; padding: 12px 20px !important; }
+        .nav-link:hover, .nav-link.active { color: var(--nd-blue); background: #f9f9f9; }
+
+        /* === SECTION STYLING === */
+        section { padding: 50px 0; border-bottom: 1px solid #eee; }
+        .section-header { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 24px; color: var(--nd-blue); 
+            margin-bottom: 30px; 
+            border-bottom: 2px solid var(--nd-gold); 
+            display: inline-block; padding-bottom: 5px;
+        }
+        .sub-header {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px; color: #444;
+            margin-top: 40px; margin-bottom: 20px;
+            font-weight: 700; border-left: 4px solid #eee; padding-left: 10px;
+        }
+        .back-to-top { float: right; font-size: 11px; text-transform: uppercase; color: #aaa; margin-top: 10px; }
+
+        /* === RESEARCH LIST === */
+        .item-row { margin-bottom: 12px; display: flex; align-items: flex-start; line-height: 1.5; }
+        .item-number { width: 30px; font-weight: 700; color: #bbb; flex-shrink: 0; font-size: 13px; text-align: right; margin-right: 15px; }
+        .item-content { flex-grow: 1; }
+        .item-title { font-weight: 700; color: #222; font-size: 15px; }
+        .item-title:hover { text-decoration: underline; color: var(--nd-gold); }
+        .item-meta { color: #666; font-size: 14px; }
+        .abstract-trigger { cursor: pointer; color: var(--nd-gold); font-size: 11px; font-weight: 700; text-transform: uppercase; margin-left: 8px; }
+        .abstract-text { display: none; background: #f8f9fa; padding: 12px; margin-top: 5px; border-left: 3px solid var(--nd-gold); font-size: 13px; color: #555; }
+
+        /* === FILTERS === */
+        .filter-container { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px dotted #ccc; font-size: 13px; }
+        .filter-label { font-weight: 700; color: #888; margin-right: 10px; text-transform: uppercase; font-size: 11px; }
+        .filter-btn { border: 1px solid #ddd; background: #fff; padding: 2px 10px; margin-right: 5px; border-radius: 2px; cursor: pointer; transition: all 0.2s; }
+        .filter-btn:hover { background: #f0f0f0; }
+        .filter-btn.active { background: var(--nd-blue); color: #fff; border-color: var(--nd-blue); }
+
+        /* === POLICY LIST (Compact) === */
+        .policy-item { display: flex; align-items: flex-start; margin-bottom: 25px; }
+        .policy-logo { width: 60px; margin-right: 20px; mix-blend-mode: multiply; }
+        .policy-type { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--nd-gold); font-weight: 700; display: block; }
+
+        /* === TEACHING LIST (Timeline) === */
+        .teach-item { display: flex; margin-bottom: 20px; border-bottom: 1px solid #f9f9f9; padding-bottom: 15px; }
+        .teach-left { width: 120px; flex-shrink: 0; padding-right: 15px; display: flex; flex-direction: column; gap: 5px; }
+        .teach-right { flex-grow: 1; border-left: 2px solid #eee; padding-left: 15px; }
+        .syl-btn { background: #f4f4f4; color: #444; font-size: 11px; padding: 3px 8px; border-radius: 3px; display: block; text-align: center; font-weight: 600; }
+        .syl-btn:hover { background: var(--nd-blue); color: white; }
+        .univ-logo-header { display: flex; align-items: center; margin-bottom: 20px; margin-top: 30px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .univ-logo-img { height: 40px; width: auto; margin-right: 15px; }
+
+        /* === ADVISING LIST === */
+        .adv-list { list-style: none; padding: 0; margin: 0; }
+        .adv-item { margin-bottom: 10px; padding-left: 15px; border-left: 3px solid #eee; }
+        .adv-item:hover { border-left-color: var(--nd-gold); }
+        .adv-name { font-weight: 700; color: var(--nd-blue); font-size: 14px; }
+        .adv-role { font-size: 13px; color: #666; font-style: italic; }
+
+    </style>
+</head>
+<body data-bs-spy="scroll" data-bs-target="#main-nav" tabindex="0">
+
+    <div id="top"></div>
+
+    <div class="banner-section">
+        <div class="container">
+            <div class="profile-box">
+                <div class="row align-items-center">
+                    <div class="col-md-auto text-center">
+                        <img src="img/profile.jpg" class="profile-img" alt="Saad Gulzar">
+                    </div>
+                    <div class="col-md">
+                        <h1>Saad Gulzar</h1>
+                        <div class="designation">
+                            <br>
+                            Associate Professor of Political Science<br>
+                            Associate Professor of Global Affairs<br>
+                            Associate Professor of Economics (Concurrent)<br>
+                            <br>
+                            University of Notre Dame
+                        </div>
+                        <div class="icon-row">
+                            <a href="https://www.dropbox.com/s/llr8e84hqq7j7yv/Saad%20Gulzar_CV.pdf?raw=1"><i class="fas fa-file-alt"></i> CV</a>
+                            <a href="mailto:sgulzar@nd.edu"><i class="fa-solid fa-envelope"></i> Email</a>
+                            <a href="https://scholar.google.com/citations?user=EDq5FvQAAAAJ"><i class="fas fa-graduation-cap"></i> Scholar</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 ps-4" style="font-size:14px; color:#555; border-left:1px solid #eee;">
+                        My research interests lie in political economy, comparative politics, development, and environmental governance and conservation, with a regional focus on South Asia. I received my Ph.D. in Politics from New York University in 2017. Previously, I was on the faculty of Stanford University and Princeton University.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav id="main-nav" class="sticky-nav">
+        <div class="container">
+            <ul class="nav justify-content-center">
+                <li><a class="nav-link" href="#research">Research</a></li>
+                <li><a class="nav-link" href="#policy">Policy Work</a></li>
+                <li><a class="nav-link" href="#teaching">Teaching</a></li>
+                <li><a class="nav-link" href="#advising">Advising</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <section id="research">
+            
+            <h2 class="section-header">Research</h2>
+
+            <h3 class="sub-header" style="margin-top:10px;">Published Papers</h3>
+            
+            <div id="published-list">
+
+                <div class="item-row theme-env region-global">
+                    <div class="item-number">20.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/scl/fi/ixtd61dhbb4wusa5i7g0f/BaragwanathGulzar_ARPS.pdf?rlkey=s36r2eizps2vbx0x2klvs8dus&raw=1" class="item-title">Democracy and the Environment</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abs20')">[Abstract]</span>
+                        <div class="item-meta"><em>Annual Review of Political Science</em> (Forthcoming). With Kathryn Baragwanath.</div>
+                        <div id="abs20" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row theme-elec region-pak">
+                    <div class="item-number">19.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/scl/fi/bfklqn3u2ifhl5fsngqno/GoldenGulzarSonnet_Capacity.pdf?rlkey=86t9r06hsjur8zs43l7enwdh1&raw=1" class="item-title">Political Responsiveness, Information Provision, and Capacity Gaps</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abs19')">[Abstract]</span>
+                        <div class="item-meta"><em>Comparative Political Studies</em> (Forthcoming). With Miriam Golden and Luke Sonnet.</div>
+                        <div id="abs19" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row theme-env region-pak">
+                    <div class="item-number">18.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/scl/fi/7059fqn1aoxunnb6hs4h4/DippopaGulzar_PolicyBrief.pdf?rlkey=cn2u61fiz8bnhqkfymaqf0omv&raw=1" class="item-title">Air pollution could be reduced by incentivizing local government officials to control crop burning</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abs18')">[Abstract]</span>
+                        <div class="item-meta"><em>Nature: Policy Brief</em> (2025). With Gemma Dipoppa.</div>
+                        <div id="abs18" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row theme-elec region-india">
+                    <div class="item-number">17.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/scl/fi/9a0sbyf839moe3bq4jcnb/GulzarPathakThompsonToth_RankandFile.pdf?rlkey=qjqd2mg7ds2kgl7un56fzqibn&raw=1" class="item-title">Can Party Elites Shape the Rank-and-File? Evidence from a Recruitment Experiment in India</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abs17')">[Abstract]</span>
+                        <div class="item-meta"><em>American Political Science Review</em> (2025). With Durgesh Pathak, Sarah Thompson, and Aliz Toth.</div>
+                        <div id="abs17" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row theme-bur region-pak">
+                    <div class="item-number">16.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/scl/fi/yq4q8nkin3jgeqaqen07z/CallenGulzarHasanainKhanRezaee_Personalities.pdf?rlkey=x1mwrszeyd7lrdnwnoi8f7owg&raw=1" class="item-title">Personalities and Public Sector Performance: Evidence from a Health Experiment in Pakistan</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abs16')">[Abstract]</span>
+                        <div class="item-meta"><em>Economic Development and Cultural Change</em> (2025). With Michael Callen, Ali Hasanain, Muhammad Yasir Khan, and Arman Rezaee.</div>
+                        <div id="abs16" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row theme-elec region-pak">
+                    <div class="item-number">15.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/scl/fi/dvhpeg778crdrwew4f60p/gulzarkhan_goodpoliticians.pdf?rlkey=rerhgpmy1gdnab1bviy7dpv5p&raw=1" class="item-title">Good Politicians: Experimental Evidence on Motivations for Political Candidacy</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abs15')">[Abstract]</span>
+                        <div class="item-meta"><em>Review of Economic Studies</em> (2025). With Muhammad Yasir Khan.</div>
+                        <div id="abs15" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row theme-env region-pak">
+                    <div class="item-number">14.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/scl/fi/nraik78v5qjja37604buk/DipoppaGulzar_Nature.pdf?rlkey=hkczivo1qbx8fttjjgn1u0qrz&raw=1" class="item-title">Bureaucrat Incentives Reduce Crop Burning and Child Mortality in South Asia</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abs14')">[Abstract]</span>
+                        <div class="item-meta"><em>Nature</em> (2024). With Gemma Dipoppa.</div>
+                        <div id="abs14" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row theme-meth region-global">
+                    <div class="item-number">13.</div>
+                    <div class="item-content">
+                        <a href="#" class="item-title">Inaccurate Forecasting of a Randomized Controlled Trial</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abs13')">[Abstract]</span>
+                        <div class="item-meta"><em>Journal of Experimental Political Science</em> (2024). With Mats Ahrehshop, Miriam Golden, and Luke Sonnet.</div>
+                        <div id="abs13" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row theme-bur region-pak">
+                    <div class="item-number">12.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/scl/fi/opyyjxn3rxb1zmg0etdx8/CallenGulzarRezaeeShapiro_FCR.pdf?rlkey=lbyxd46z1lrnnl7ng2kjo8ykw&raw=1" class="item-title">Extending the Formal State: The Case of Pakistan’s Frontier Crimes Regulation</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abs12')">[Abstract]</span>
+                        <div class="item-meta"><em>Economica</em> (2024). With Michael Callen, Arman Rezaee, and Jacob Shapiro.</div>
+                        <div id="abs12" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row theme-env region-india">
+                    <div class="item-number">11.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/scl/fi/cxjdufo8jq092u3vpcz29/gulzarlalpasquale_forest.pdf?rlkey=eg7wnahyyacy3d5orzp9rpn54&raw=1" class="item-title">Representation and Forest Conservation: Evidence from India’s Scheduled Areas</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abs11')">[Abstract]</span>
+                        <div class="item-meta"><em>American Political Science Review</em> (2024). With Apoorva Lal and Benjamin Pasquale.</div>
+                        <div id="abs11" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row theme-bur region-pak">
+                    <div class="item-number">10.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/s/w48mmtvtf6azko6/PE_absence_final.pdf?raw=1" class="item-title">The Political Economy of Public Sector Absence</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abs10')">[Abstract]</span>
+                        <div class="item-meta"><em>Journal of Public Economics</em> (2023). With Michael Callen, Ali Hasanain, Muhammad Yasir Khan, and Arman Rezaee.</div>
+                        <div id="abs10" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row theme-elec region-col">
+                    <div class="item-number">9.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/s/zx7569tabk52ipg/gulzarruedaruiz_campaign_contributions_limits_ajps.pdf?raw=1" class="item-title">Can Campaign Contribution Limits Curb the Influence of Money in Politics?</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abs9')">[Abstract]</span>
+                        <div class="item-meta"><em>American Journal of Political Science</em> (2022). With Miguel R. Rueda and Nelson A. Ruiz.</div>
+                        <div id="abs9" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row theme-elec region-global">
+                    <div class="item-number">8.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/s/zjxman9tut1y57z/gulzarrobinsonruiz_ballot.pdf?raw=1" class="item-title">How Campaigns Respond to Ballot Position: A New Mechanism for Order Effects</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abs8')">[Abstract]</span>
+                        <div class="item-meta"><em>Journal of Politics</em> (2022). With Thomas S. Robinson and Nelson A. Ruiz.</div>
+                        <div id="abs8" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row theme-elec region-nepal">
+                    <div class="item-number">7.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/s/a4fxhyq6cwm4wky/NepalCandidateSelection_jop.pdf?raw=1" class="item-title">Information, Candidate Selection, and Quality of Representation: Evidence from Nepal</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abs7')">[Abstract]</span>
+                        <div class="item-meta"><em>Journal of Politics</em> (2021). With Zuhad Hai and Binod Kumar Paudel.</div>
+                        <div id="abs7" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row theme-elec region-global">
+                    <div class="item-number">6.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/s/9x0kbzqura40xrq/PoliticalEntry_arps.pdf?raw=1" class="item-title">Who Enters Politics and Why?</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abs6')">[Abstract]</span>
+                        <div class="item-meta"><em>Annual Review of Political Science</em> (2021).</div>
+                        <div id="abs6" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row theme-elec region-india">
+                    <div class="item-number">5.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/s/1w1l54t83pqhdd4/scheduled_areas_final.pdf?raw=1" class="item-title">Does Political Affirmative Action Work, and for Whom? Theory and Evidence on India’s Scheduled Areas</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abs5')">[Abstract]</span>
+                        <div class="item-meta"><em>American Political Science Review</em> (2020). With Nicholas Haas and Benjamin Pasquale.</div>
+                        <div id="abs5" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row theme-bur region-pak">
+                    <div class="item-number">4.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/s/wa9u4paqs5jxdg8/data_policy_decisions_jde.pdf?raw=1" class="item-title">Data and Policy Decisions: Experimental Evidence from Pakistan</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abs4')">[Abstract]</span>
+                        <div class="item-meta"><em>Journal of Development Economics</em> (2020). With Michael Callen, Ali Hasanain, Muhammad Yasir Khan, and Arman Rezaee.</div>
+                        <div id="abs4" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row theme-bur region-pak">
+                    <div class="item-number">3.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/s/3fg10z15w7tsfnz/Political_Alignment_jop.pdf?raw=1" class="item-title">Can Political Alignment be Costly?</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abs3')">[Abstract]</span>
+                        <div class="item-meta"><em>Journal of Politics</em> (2020). With Michael Callen and Arman Rezaee.</div>
+                        <div id="abs3" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row theme-id region-pak">
+                    <div class="item-number">2.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/s/zpx40o3aoqirbcy/Bursztyn_Callen_Ferman_Gulzar_Hasanain_Yuchtman_paper1.pdf?raw=1" class="item-title">Political Identity: Experimental Evidence on Anti-Americanism in Pakistan</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abs2')">[Abstract]</span>
+                        <div class="item-meta"><em>Journal of the European Economic Association</em> (2020). With Leonardo Bursztyn, Michael Callen, Bruno Ferman, Ali Hasanain, and Noam Yuchtman.</div>
+                        <div id="abs2" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row theme-bur region-india">
+                    <div class="item-number">1.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/scl/fi/ywsk8w8ptp4dc1n6nj0x0/gulzarpasquale_politiciansbureaucratsdevelopment.pdf?rlkey=ph4n3ov0pz7jqetgp1wnkx1mf&raw=1" class="item-title">Politicians, Bureaucrats, and Development: Evidence from India</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abs1')">[Abstract]</span>
+                        <div class="item-meta"><em>American Political Science Review</em> (2017). With Benjamin J. Pasquale.</div>
+                        <div id="abs1" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+            </div> <div class="filter-container" style="margin-top: 30px; margin-bottom: 40px; border-top: 1px dotted #ccc; padding-top: 15px;">
+                <div style="font-size:12px; color:#555; margin-bottom:10px; font-style:italic;">Filter the list above:</div>
+                <div class="mb-2">
+                    <span class="filter-label">Theme:</span>
+                    <button class="filter-btn active" onclick="setTheme('all', this)">All</button>
+                    <button class="filter-btn" onclick="setTheme('env', this)">Environment</button>
+                    <button class="filter-btn" onclick="setTheme('elec', this)">Elections</button>
+                    <button class="filter-btn" onclick="setTheme('bur', this)">Bureaucracy</button>
+                    <button class="filter-btn" onclick="setTheme('id', this)">Identity</button>
+                    <button class="filter-btn" onclick="setTheme('meth', this)">Methodology</button>
+                </div>
+                <div>
+                    <span class="filter-label">Region:</span>
+                    <button class="filter-btn active" onclick="setRegion('all', this)">All</button>
+                    <button class="filter-btn" onclick="setRegion('india', this)">India</button>
+                    <button class="filter-btn" onclick="setRegion('pak', this)">Pakistan</button>
+                    <button class="filter-btn" onclick="setRegion('nepal', this)">Nepal</button>
+                    <button class="filter-btn" onclick="setRegion('col', this)">Colombia</button>
+                </div>
+            </div>
+
+            <h3 class="sub-header">Working Papers</h3>
+            <div id="working-list">
+                
+                <div class="item-row">
+                    <div class="item-number">WP9.</div>
+                    <div class="item-content">
+                        <a href="https://www.juanfeliperiano.com/papers/procurement.pdf" class="item-title">Pay-to-Play: Campaign Contributions and Kickbacks in Public Procurement</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abswp9')">[Abstract]</span>
+                        <div class="item-meta">With Juan Felipe Ladino and Juan Felipe Riaño.</div>
+                        <div id="abswp9" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row">
+                    <div class="item-number">WP8.</div>
+                    <div class="item-content">
+                        <a href="https://escholarship.org/content/qt3n38q1qz/qt3n38q1qz_noSplash_d0c2bcf4e59e93a1a5e590f910318e52.pdf" class="item-title">Does Revolution Work? Post-revolutionary evolution of Nepal’s political classes</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abswp8')">[Abstract]</span>
+                        <div class="item-meta">With Bishma Bhusal, Michael Callen, Rohini Pande, Soledad Prillaman, and Deepak Singhania.</div>
+                        <div id="abswp8" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row">
+                    <div class="item-number">WP7.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/scl/fi/0c1pxwqfufm0lpjrh5ajn/AllieEnssleGoyalGulzarPathan_Names.pdf?rlkey=ogjl8wo0wj616muvm1usrjy1e&raw=1" class="item-title">Increasing Polarization of Hindu-Muslim Identity in India</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abswp7')">[Abstract]</span>
+                        <div class="item-meta">With Feyaad Allie, Viktor Enssle, Tanushree Goyal, and Gufran Pathan.</div>
+                        <div id="abswp7" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row">
+                    <div class="item-number">WP6.</div>
+                    <div class="item-content">
+                        <a href="#" class="item-title">Mobilizing Women at Scale: Mixed Evidence from a Field Experiment</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abswp6')">[Abstract]</span>
+                        <div class="item-meta">With Anirvan Chowdhury and Durgesh Pathak.</div>
+                        <div id="abswp6" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row">
+                    <div class="item-number">WP5.</div>
+                    <div class="item-content">
+                        <a href="#" class="item-title">From Paper to Digital: Understanding the Ecological Impacts of India’s Land Records Reform</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abswp5')">[Abstract]</span>
+                        <div class="item-meta">With Aliz Toth and Anzony Quispe.</div>
+                        <div id="abswp5" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row">
+                    <div class="item-number">WP4.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/scl/fi/vxpx3zjl5lz1sojicycg5/GulzarLadinoMehmoodRogger_Command.pdf?rlkey=fpxz1rbnk3eo4fxi7u4ctji0y&raw=1" class="item-title">Command and Can’t Control: Assessing Centralized Accountability in the Public Sector</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abswp4')">[Abstract]</span>
+                        <div class="item-meta">With Juan Felipe Ladino, Muhammad Zia Mehmood, and Daniel Rogger.</div>
+                        <div id="abswp4" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row">
+                    <div class="item-number">WP3.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/s/yvikaupcld2i9os/Official_Data.pdf?raw=1" class="item-title">Official Attendance Data for Politically Connected Bureaucrats Are Less Accurate</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abswp3')">[Abstract]</span>
+                        <div class="item-meta">With Michael Callen, Ali Hasanain, and Muhammad Yasir Khan. (Resting Project)</div>
+                        <div id="abswp3" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row">
+                    <div class="item-number">WP2.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/scl/fi/ww85o8gmd9sgwrux0rh0o/GulzarMousa_Gender.pdf?rlkey=nttjwi11jmojultkz447fquv9&raw=1" class="item-title">Random Acts of Kindness? How Gender Shapes Helping Behaviors Around the World</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abswp2')">[Abstract]</span>
+                        <div class="item-meta">With Salma Mousa.</div>
+                        <div id="abswp2" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row">
+                    <div class="item-number">WP1.</div>
+                    <div class="item-content">
+                        <a href="https://www.dropbox.com/s/27eonmxfdoxr6bs/gulzarkhansonnet_pk.pdf?raw=1" class="item-title">Pessimistic Beliefs of Norms: Descriptive Findings on Women’s Political Participation in Pakistan</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('abswp1')">[Abstract]</span>
+                        <div class="item-meta">With Muhammad Yasir Khan and Luke Sonnet.</div>
+                        <div id="abswp1" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <h3 class="sub-header">Book Chapters</h3>
+            <div id="book-list">
+                <div class="item-row">
+                    <div class="item-number">B2.</div>
+                    <div class="item-content">
+                        <a href="#" class="item-title">Crop Burning</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('absb2')">[Abstract]</span>
+                        <div class="item-meta">In <em>Unveiling Pakistan’s Air Pollution</em> (2025). With Gemma Dipoppa.</div>
+                        <div id="absb2" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+
+                <div class="item-row">
+                    <div class="item-number">B1.</div>
+                    <div class="item-content">
+                        <a href="https://openknowledge.worldbank.org/bitstream/handle/10986/32576/9783030251208.pdf?sequence=1&isAllowed=y" class="item-title">Studying Sensitive Topics in Fragile Contexts</a>
+                        <span class="abstract-trigger" onclick="toggleAbs('absb1')">[Abstract]</span>
+                        <div class="item-meta">In <em>Data collection in Fragile States</em> (2019). With Mohammed Isaqzadeh and Jacob Shapiro.</div>
+                        <div id="absb1" class="abstract-text">ABC</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="policy">
+            <a href="#top" class="back-to-top">Back to top ↑</a>
+            <h2 class="section-header">Policy Work</h2>
+
+            <div class="row">
+                
+                <div class="col-lg-4 mb-4">
+                    <h3 class="sub-header" style="margin-top:0; border-bottom:1px solid #ddd; border-left:none; padding-left:0; margin-bottom:20px;">Papers</h3>
+                    
+                    <div class="policy-item">
+                        <img src="https://placehold.co/100x100/ffffff/002b5c?text=LJE" class="policy-logo" style="width:50px; margin-right:15px;" alt="LJE">
+                        <div class="item-content">
+                            <span class="type-badge bg-paper">Paper</span>
+                            <div style="display:block;">
+                                <a href="#" class="item-title" style="font-size:14px;">Improving Public Health Delivery in Punjab, Pakistan: Issues and Opportunities</a>
+                                <div class="item-meta" style="font-size:12px;">
+                                    <em>Lahore Journal of Economics 18:SE</em> (2013).<br>
+                                    With Michael Callen et al.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 mb-4">
+                    <h3 class="sub-header" style="margin-top:0; border-bottom:1px solid #ddd; border-left:none; padding-left:0; margin-bottom:20px;">Policy Briefs</h3>
+
+                    <div class="policy-item">
+                        <img src="img/princeton.png" class="policy-logo" style="width:50px; margin-right:15px;" alt="Princeton">
+                        <div class="item-content">
+                            <span class="type-badge bg-brief">Policy Brief</span>
+                            <div style="display:block;">
+                                <a href="#" class="item-title" style="font-size:14px;">Political Violence in Pakistan 1988-2010: Myths vs Realities</a>
+                                <div class="item-meta" style="font-size:12px;">
+                                    (2012) Princeton ESOC.<br>
+                                    With Jacob Shapiro.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="policy-item">
+                        <img src="https://placehold.co/100x100/ffffff/5e2a84?text=IGC" class="policy-logo" style="width:50px; margin-right:15px;" alt="IGC">
+                        <div class="item-content">
+                            <span class="type-badge bg-brief">Policy Brief</span>
+                            <div style="display:block;">
+                                <a href="#" class="item-title" style="font-size:14px;">Education Policy in Pakistan: a Framework for Reform</a>
+                                <div class="item-meta" style="font-size:12px;">
+                                    (2011) IGC.<br>
+                                    For Tahir Andrabi et al.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 mb-4">
+                    <h3 class="sub-header" style="margin-top:0; border-bottom:1px solid #ddd; border-left:none; padding-left:0; margin-bottom:20px;">Reports</h3>
+
+                    <div class="policy-item">
+                        <img src="img/worldbank.png" class="policy-logo" style="width:50px; margin-right:15px;" alt="World Bank">
+                        <div class="item-content">
+                            <span class="type-badge bg-report">Report</span>
+                            <div style="display:block;">
+                                <span class="item-title" style="font-size:14px;">Background report on Representation and Environment</span>
+                                <div class="item-meta" style="font-size:12px;">
+                                    (2024) World Bank.<br>
+                                    With Kathryn Baragwanath.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="policy-item">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/USAID-Identity.svg/500px-USAID-Identity.svg.png" class="policy-logo" style="width:50px; margin-right:15px;" alt="USAID">
+                        <div class="item-content">
+                            <span class="type-badge bg-report">Report</span>
+                            <div style="display:block;">
+                                <a href="#" class="item-title" style="font-size:14px;">What Works for Women’s Political Participation and Leadership</a>
+                                <div class="item-meta" style="font-size:12px;">
+                                    (2022) USAID.<br>
+                                    With Soledad Prillaman.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="policy-item">
+                        <img src="https://placehold.co/100x100/ffffff/ba0c2f?text=3ie" class="policy-logo" style="width:50px; margin-right:15px;" alt="3ie">
+                        <div class="item-content">
+                            <span class="type-badge bg-report">Report</span>
+                            <div style="display:block;">
+                                <a href="#" class="item-title" style="font-size:14px;">Promoting Political Competition Through Electoral Processes</a>
+                                <div class="item-meta" style="font-size:12px;">
+                                    (2022) 3ie.<br>
+                                    With Parraro et al.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="policy-item">
+                        <img src="https://placehold.co/100x100/ffffff/333333?text=Alif+Ailaan" class="policy-logo" style="width:50px; margin-right:15px;" alt="Alif Ailaan">
+                        <div class="item-content">
+                            <span class="type-badge bg-report">Report</span>
+                            <div style="display:block;">
+                                <span class="item-title" style="font-size:14px;">Teacher Attendance in Gujranwala and Narowal</span>
+                                <div class="item-meta" style="font-size:12px;">
+                                    (2016) Alif Ailaan.<br>
+                                    With Arqam Lodhi et al.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="policy-item">
+                        <img src="https://placehold.co/100x100/006600/ffffff?text=Govt+Punjab" class="policy-logo" style="width:50px; margin-right:15px;" alt="Govt Punjab">
+                        <div class="item-content">
+                            <span class="type-badge bg-report">Report</span>
+                            <div style="display:block;">
+                                <span class="item-title" style="font-size:14px;">Baseline Report on the Punjab Economic Opportunities Program</span>
+                                <div class="item-meta" style="font-size:12px;">
+                                    (2012) Govt of Punjab.<br>
+                                    With Imran Rasul et al.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="policy-item">
+                        <img src="https://placehold.co/100x100/ffffff/5e2a84?text=IGC" class="policy-logo" style="width:50px; margin-right:15px;" alt="IGC">
+                        <div class="item-content">
+                            <span class="type-badge bg-report">Report</span>
+                            <div style="display:block;">
+                                <a href="#" class="item-title" style="font-size:14px;">Pakistan’s Trade Policies: Future Directions</a>
+                                <div class="item-meta" style="font-size:12px;">
+                                    (2011) IGC.<br>
+                                    With Ashraf Khan et al.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div> </div> </section>
+
+        <section id="teaching">
+            <a href="#top" class="back-to-top">Back to top ↑</a>
+            <h2 class="section-header">Teaching</h2>
+
+            <div class="univ-logo-header">
+                <img src="img/princeton.png" class="univ-logo-img" alt="Princeton">
+                <strong style="font-size:18px; color:var(--nd-blue);">Princeton University</strong>
+            </div>
+            
+            <div class="teach-item">
+                <div class="teach-left">
+                    <a href="https://www.dropbox.com/scl/fi/91lcebhz6aa06062iweh0/SPI200_syllabus_20240331.pdf?rlkey=btocd8gamdsco3pbowz3eihhq&raw=1" class="syl-btn">Spring 2024</a>
+                </div>
+                <div class="teach-right">
+                    <strong style="color:#222;">SPI 200: Statistics for Social Science</strong>
+                    <div class="item-meta">Undergraduate Lecture</div>
+                </div>
+            </div>
+
+            <div class="teach-item">
+                <div class="teach-left">
+                    <a href="https://www.dropbox.com/scl/fi/io3960ctsxr3vmolzpuv3/SPI593Q_Gulzar_Bureaucracy_2024.pdf?rlkey=yc5n8j18bx60n5ycmcnynduh6&raw=1" class="syl-btn">Spring 2024</a>
+                    <a href="https://www.dropbox.com/s/7o917m6lgdmb2a8/SPI593Q_Gulzar_Bureaucracy.pdf?raw=1" class="syl-btn" style="margin-top:4px;">Spring 2023</a>
+                </div>
+                <div class="teach-right">
+                    <strong style="color:#222;">SPI 593Q: Bureaucracy in the Developing World</strong>
+                    <div class="item-meta">Master's Seminar</div>
+                </div>
+            </div>
+
+            <div class="teach-item">
+                <div class="teach-left">
+                    <a href="https://www.dropbox.com/scl/fi/4aq36i8w1mutsy0v0bnoe/Gulzar_POL505_Syllabus_2024.pdf?rlkey=cklenjxrxl8i639whasgq8156&raw=1" class="syl-btn">Spring 2024</a>
+                    <a href="https://www.dropbox.com/s/d7dntsby83br1ch/Gulzar_POL505_Syllabus.pdf?raw=1" class="syl-btn" style="margin-top:4px;">Spring 2023</a>
+                </div>
+                <div class="teach-right">
+                    <strong style="color:#222;">POL 505: Experimental Political Science</strong>
+                    <div class="item-meta">PhD Seminar</div>
+                </div>
+            </div>
+
+            <div class="univ-logo-header">
+                <img src="img/stanford.png" class="univ-logo-img" alt="Stanford">
+                <strong style="font-size:18px; color:var(--nd-blue);">Stanford University</strong>
+            </div>
+
+            <div class="teach-item">
+                <div class="teach-left">
+                    <a href="https://www.dropbox.com/s/xrnp919vngmavng/PS150_2022.pdf?raw=1" class="syl-btn">Spring 2022</a>
+                    <a href="https://www.dropbox.com/s/85bsgzhz29w55ba/PS150_2020.pdf?raw=1" class="syl-btn" style="margin-top:4px;">Spring 2020</a>
+                    <a href="https://www.dropbox.com/s/fzikwlbqmsv2pmw/PS150_2019.pdf?raw=1" class="syl-btn" style="margin-top:4px;">Spring 2019</a>
+                    <a href="https://www.dropbox.com/s/8jt8s3sjavqgdgj/PS150_20180402.pdf?dl=0" class="syl-btn" style="margin-top:4px;">Spring 2018</a>
+                </div>
+                <div class="teach-right">
+                    <strong style="color:#222;">POLISCI 150C: Causal Inference for Social Science</strong>
+                    <div class="item-meta">Undergraduate/Master's Lecture (Data Science Track)</div>
+                </div>
+            </div>
+
+            <div class="teach-item">
+                <div class="teach-left">
+                    <a href="https://www.dropbox.com/s/qnlfsvtdfww0gkq/College105_Politics%20of%20Development.pdf?raw=1" class="syl-btn">Spring 2022</a>
+                </div>
+                <div class="teach-right">
+                    <strong style="color:#222;">COLLEGE 105: Politics of Development</strong>
+                    <div class="item-meta">Undergraduate Lecture (with Solédad Prillaman)</div>
+                </div>
+            </div>
+
+            <div class="teach-item">
+                <div class="teach-left">
+                    <a href="https://www.dropbox.com/s/ty0bg274x1m2e30/440A_Theories_of_Comparative_Politics.pdf?raw=1" class="syl-btn">Autumn 2019</a>
+                </div>
+                <div class="teach-right">
+                    <strong style="color:#222;">POLISCI 440A: Theories of Comparative Politics</strong>
+                    <div class="item-meta">PhD Seminar (with David Laitin)</div>
+                </div>
+            </div>
+
+            <div class="teach-item">
+                <div class="teach-left">
+                    <a href="https://www.dropbox.com/s/velhxoqyaajqr6p/Gulzar_446E_Syllabus.pdf?raw=1" class="syl-btn">Spring 2018</a>
+                </div>
+                <div class="teach-right">
+                    <strong style="color:#222;">POLISCI 446E: Seminar on Political Economy Experiments</strong>
+                    <div class="item-meta">PhD Seminar</div>
+                </div>
+            </div>
+
+            <div class="univ-logo-header">
+                <img src="img/nyu.png" class="univ-logo-img" alt="NYU">
+                <strong style="font-size:18px; color:var(--nd-blue);">New York University</strong>
+            </div>
+
+            <div class="teach-item">
+                <div class="teach-left">
+                    <a href="https://www.dropbox.com/s/jiw3xnwexhpvuav/quant%202%20spring%202017.pdf?dl=0" class="syl-btn">Spring 2017</a>
+                </div>
+                <div class="teach-right">
+                    <strong style="color:#222;">Quantitative Political Analysis II</strong>
+                    <div class="item-meta">PhD Methods (Teaching Assistant for Cyrus Samii)</div>
+                </div>
+            </div>
+
+            <div class="teach-item">
+                <div class="teach-left">
+                    <a href="https://www.dropbox.com/s/ti4zaxpgclq975l/Spring%202014_International%20Politics.pdf?dl=0" class="syl-btn">Spring 2015</a>
+                    <a href="https://www.dropbox.com/s/80cbenpf914dx65/Fall%202014_International%20Politics.pdf?dl=0" class="syl-btn" style="margin-top:4px;">Fall 2014</a>
+                </div>
+                <div class="teach-right">
+                    <strong style="color:#222;">Introduction to International Politics</strong>
+                    <div class="item-meta">Freshman Seminar (Teaching Assistant)</div>
+                </div>
+            </div>
+
+        </section>
+
+        <section id="advising" style="border-bottom:none; padding-bottom:80px;">
+            <a href="#top" class="back-to-top">Back to top ↑</a>
+            <h2 class="section-header">Advising</h2>
+
+            <div class="row">
+                
+                <div class="col-md-6 mb-4">
+                    
+                    <h4 style="font-size:14px; text-transform:uppercase; font-weight:700; color:#888; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:5px;">Post-Doctoral</h4>
+                    <ul class="adv-list" style="margin-bottom:30px;">
+                        <li class="adv-item">
+                            <a href="https://www.gemmadipoppa.com/" class="adv-name">Gemma Dipoppa</a>
+                            <div class="adv-role">Assistant Professor, Brown University (2022)</div>
+                        </li>
+                    </ul>
+
+                    <h4 style="font-size:14px; text-transform:uppercase; font-weight:700; color:#888; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:5px;">Doctoral</h4>
+                    <ul class="adv-list">
+                        <li class="adv-item">
+                            <a href="https://linaskoglund.github.io/" class="adv-name">Lina Skoglund</a>
+                            <div class="adv-role">Prize Fellowship, Harvard University (2025)</div>
+                        </li>
+                        <li class="adv-item">
+                            <a href="https://www.natalyarahman.com/" class="adv-name">Natalya Adam-Rahman</a>
+                            <div class="adv-role">COLLEGE, Stanford University (2025)</div>
+                        </li>
+                        <li class="adv-item">
+                            <a href="https://www.sarahthompson.info/" class="adv-name">Sarah Thompson</a>
+                            <div class="adv-role">Assistant Professor, Cornell University (2024)</div>
+                        </li>
+                        <li class="adv-item">
+                            <a href="https://www.feyaadallie.com/" class="adv-name">Feyaad Allie</a>
+                            <div class="adv-role">Assistant Professor, Harvard University (2023)</div>
+                        </li>
+                        <li class="adv-item">
+                            <a href="https://aliztoth.com/" class="adv-name">Aliz Toth</a>
+                            <div class="adv-role">Assistant Professor, London School of Economics (2023)</div>
+                        </li>
+                        <li class="adv-item">
+                            <a href="https://abdelgadir.com/" class="adv-name">Aala Abdelgadir</a>
+                            <div class="adv-role">Assistant Professor, University of Pittsburgh (2023)</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <h4 style="font-size:14px; text-transform:uppercase; font-weight:700; color:#888; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:5px;">Pre-Doctoral</h4>
+                    <ul class="adv-list">
+                        <li class="adv-item">
+                            <span class="adv-name" style="color:#444;">Viktor Enssle</span>
+                            <div class="adv-role">DPhil in Politics, University of Oxford (2025)</div>
+                        </li>
+                        <li class="adv-item">
+                            <span class="adv-name" style="color:#444;">Annalisa Pezone</span>
+                            <div class="adv-role">PhD Politics, New York University (2024)</div>
+                        </li>
+                        <li class="adv-item">
+                            <span class="adv-name" style="color:#444;">Lucia Bertoletti</span>
+                            <div class="adv-role">Pre-doc, Kellogg School of Management (2024)</div>
+                        </li>
+                        <li class="adv-item">
+                            <a href="https://academics.business.columbia.edu/economics-division/people/diego-tocre-meza" class="adv-name">Diego Tocre</a>
+                            <div class="adv-role">PhD Economics, Columbia University (2023)</div>
+                        </li>
+                        <li class="adv-item">
+                            <a href="https://kingcenter.stanford.edu/people/ei-thandar-myint" class="adv-name">Ei-Thandar Myint</a>
+                            <div class="adv-role">PhD ARE, UC Berkeley (2023)</div>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // TOGGLE ABSTRACTS
+        function toggleAbs(id) {
+            var x = document.getElementById(id);
+            if (x.style.display === "block") {
+                x.style.display = "none";
+            } else {
+                x.style.display = "block";
+            }
+        }
+
+        // FILTER LOGIC
+        let currentTheme = 'all';
+        let currentRegion = 'all';
+
+        function setTheme(theme, btn) {
+            currentTheme = theme;
+            btn.parentNode.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterItems();
+        }
+
+        function setRegion(region, btn) {
+            currentRegion = region;
+            btn.parentNode.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterItems();
+        }
+
+        function filterItems() {
+            // Only filters Published List
+            let items = document.querySelectorAll('#published-list .item-row');
+            let visibleItems = [];
+            
+            items.forEach(item => {
+                let themeMatch = (currentTheme === 'all') || item.classList.contains('theme-' + currentTheme);
+                let regionMatch = (currentRegion === 'all') || item.classList.contains('region-' + currentRegion);
+                
+                if (themeMatch && regionMatch) {
+                    item.style.display = 'flex';
+                    visibleItems.push(item);
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Re-numbering visible published papers
+            let count = visibleItems.length;
+            visibleItems.forEach(item => {
+                let numSpan = item.querySelector('.item-number');
+                if (numSpan) numSpan.textContent = count + '.';
+                count--;
+            });
+        }
+    </script>
+</body>
+</html>
