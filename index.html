@@ -890,28 +890,28 @@
 
                 </div> 
                 
-                <div class="col-12 mt-4">
+               <div class="col-12 mt-4">
                     <h3 class="sub-header" style="margin-top:20px; border-bottom:1px solid #ddd; border-left:none; padding-left:0; margin-bottom:30px;">Policy Collaborations</h3>
                     
-                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 40px; padding: 10px 20px;">
+                    <div class="partners-grid">
                         
                         <a href="https://www.undp.org/" target="_blank" class="partner-logo-link">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/United_Nations_Development_Programme_logo.svg/320px-United_Nations_Development_Programme_logo.svg.png" 
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/United_Nations_Development_Programme_logo.svg/640px-United_Nations_Development_Programme_logo.svg.png" 
                                  alt="UNDP" class="partner-logo">
                         </a>
 
                         <a href="https://www.usaid.gov/" target="_blank" class="partner-logo-link">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/USAID-Identity.svg/320px-USAID-Identity.svg.png" 
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/USAID-Identity.svg/640px-USAID-Identity.svg.png" 
                                  alt="USAID" class="partner-logo">
                         </a>
 
                         <a href="https://www.worldbank.org/" target="_blank" class="partner-logo-link">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/The_World_Bank_logo.svg/320px-The_World_Bank_logo.svg.png" 
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/The_World_Bank_logo.svg/640px-The_World_Bank_logo.svg.png" 
                                  alt="World Bank" class="partner-logo">
                         </a>
 
                         <a href="https://www.theigc.org/" target="_blank" class="partner-logo-link">
-                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgNTAiIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjQwIiBmaWxsPSIjNWUyYTg0Ij5JR0M8L3RleHQ+PC9zdmc+" 
+                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMzAgNTAiIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iJ0hlbHZldGljYSBOZXVlJywgSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjcwMCIgZm9udC1zaXplPSI0MCIgZmlsbD0iIzVlMmE4NCI+SUdDPC90ZXh0Pjwvc3ZnPg==" 
                                  alt="IGC" class="partner-logo">
                         </a>
 
@@ -919,22 +919,34 @@
                 </div>
 
                 <style>
-                    /* Specific Styles for Partner Logos to ensure equality */
+                    /* Partners Grid Layout */
+                    .partners-grid {
+                        display: flex; 
+                        justify-content: space-between; 
+                        align-items: center; 
+                        flex-wrap: wrap; 
+                        gap: 30px; 
+                        padding: 10px 20px;
+                    }
+
+                    /* Consistent Logo Sizing */
                     .partner-logo {
-                        height: 45px; /* Fixed height forces visual equality */
+                        height: 55px; /* Fixed height for equality */
                         width: auto;
-                        max-width: 180px; /* Prevents extremely wide logos */
+                        max-width: 200px;
                         object-fit: contain;
-                        filter: grayscale(100%); /* Clean grayscale look */
-                        opacity: 0.7;
+                        
+                        /* Professional Grayscale Look */
+                        filter: grayscale(100%);
+                        opacity: 0.6;
                         transition: all 0.3s ease;
                     }
                     
-                    /* Hover Effect: Color + Full Opacity */
+                    /* Color on Hover */
                     .partner-logo-link:hover .partner-logo {
                         filter: grayscale(0%);
                         opacity: 1;
-                        transform: scale(1.05); /* Subtle pop effect */
+                        transform: translateY(-2px); /* Subtle lift */
                     }
                 </style>
 
