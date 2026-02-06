@@ -896,17 +896,17 @@
                     <div class="partners-grid">
                         
                         <a href="https://www.undp.org/" target="_blank" class="partner-logo-link">
-                            <img src="https://www.undp.org/sites/g/files/zskgke326/files/2025-04/undp-logo-blue.4f32e17f.svg" 
-                                 alt="UNDP" class="partner-logo">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/United_Nations_Development_Programme_logo.svg/320px-United_Nations_Development_Programme_logo.svg.png" 
+                                 alt="UNDP" class="partner-logo undp-logo">
                         </a>
 
                         <a href="https://www.usaid.gov/" target="_blank" class="partner-logo-link">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/1/17/USAID-Identity.svg" 
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/USAID-Identity.svg/640px-USAID-Identity.svg.png" 
                                  alt="USAID" class="partner-logo">
                         </a>
 
                         <a href="https://www.worldbank.org/" target="_blank" class="partner-logo-link">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/The_World_Bank_logo.svg" 
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/The_World_Bank_logo.svg/640px-The_World_Bank_logo.svg.png" 
                                  alt="World Bank" class="partner-logo">
                         </a>
 
@@ -929,24 +929,27 @@
                         padding: 10px 20px;
                     }
 
-                    /* Consistent Logo Sizing */
+                    /* Standard Logo Sizing */
                     .partner-logo {
-                        height: 55px; /* Fixed height for equality */
+                        height: 55px; 
                         width: auto;
                         max-width: 200px;
                         object-fit: contain;
-                        
-                        /* Professional Grayscale Look */
                         filter: grayscale(100%);
                         opacity: 0.6;
                         transition: all 0.3s ease;
+                    }
+
+                    /* UNDP Specific Sizing (Taller because vertical) */
+                    .undp-logo {
+                        height: 85px; /* Increased from 55px to look balanced */
                     }
                     
                     /* Color on Hover */
                     .partner-logo-link:hover .partner-logo {
                         filter: grayscale(0%);
                         opacity: 1;
-                        transform: translateY(-2px); /* Subtle lift */
+                        transform: translateY(-2px); 
                     }
                 </style>
 
