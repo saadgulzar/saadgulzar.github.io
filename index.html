@@ -772,7 +772,7 @@
             </div>
         </section>
 
-        <style>
+       <style>
             /* Modern Multi-Column Layout */
             .two-column-list {
                 column-count: 2;
@@ -782,9 +782,13 @@
             
             /* Ensure items don't break across columns awkwardly */
             .item-row {
-                break-inside: avoid;
-                page-break-inside: avoid;
-                display: inline-block; /* Essential for avoiding column breaks */
+                -webkit-column-break-inside: avoid; /* Chrome, Safari */
+                page-break-inside: avoid;           /* Legacy */
+                break-inside: avoid;                /* Standard */
+                
+                display: flex;                      /* FIXED: Keeps number next to text */
+                align-items: flex-start;            /* Aligns top of number with top of text */
+                
                 width: 100%;
                 margin-bottom: 20px;
             }
