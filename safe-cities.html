@@ -572,6 +572,12 @@
       padding: 2rem;
       margin-bottom: 3rem;
       box-shadow: var(--shadow-sm);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
+    }
+    .chart-block:hover {
+      transform: translateY(-5px) scale(1.005);
+      box-shadow: var(--shadow-lg), 0 0 20px rgba(201, 151, 0, 0.05);
+      border-color: var(--nd-gold-light);
     }
 
     .chart-header { margin-bottom: 1.25rem; }
@@ -1721,11 +1727,17 @@
       const c = chartColors();
       return {
         legend: {
+          display: true,
+          position: 'top',
+          align: 'end',
           labels: {
             color: c.text,
-            font: { family: 'Inter, sans-serif', size: 12 },
-            boxWidth: 14,
-            boxHeight: 14,
+            usePointStyle: true,
+            pointStyle: 'circle',
+            padding: 20,
+            font: { family: 'Inter, sans-serif', size: 12, weight: 600 },
+            boxWidth: 8,
+            boxHeight: 8,
             filter: (item) => !item.text.includes('CI '),
           }
         },
@@ -1735,7 +1747,11 @@
           bodyColor: c.muted,
           borderColor: c.tooltipBorder,
           borderWidth: 1,
-          padding: 10,
+          padding: 12,
+          cornerRadius: 8,
+          usePointStyle: true,
+          titleFont: { family: 'Inter, sans-serif', size: 13, weight: 700 },
+          bodyFont: { family: 'Inter, sans-serif', size: 12 },
           filter: (item) => !item.dataset.label.includes('CI '),
           callbacks: {
             label: (ctx) => ` ${ctx.dataset.label}: ${ctx.parsed.y}`,
@@ -1804,8 +1820,18 @@
     /* ------ Named init functions (called lazily on scroll) ------ */
 
     function initChart1() {
-      const ctx = document.getElementById('chart1').getContext('2d');
+      const canvas = document.getElementById('chart1');
+      const ctx = canvas.getContext('2d');
       const c = chartColors();
+
+      const goldGradient = ctx.createLinearGradient(0, 0, 0, 400);
+      goldGradient.addColorStop(0, 'rgba(201, 151, 0, 0.25)');
+      goldGradient.addColorStop(1, 'rgba(201, 151, 0, 0)');
+
+      const blueGradient = ctx.createLinearGradient(0, 0, 0, 400);
+      blueGradient.addColorStop(0, 'rgba(0, 43, 92, 0.2)');
+      blueGradient.addColorStop(1, 'rgba(0, 43, 92, 0)');
+
       const chart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -1854,11 +1880,15 @@
               label: 'Remote Reporting (15 Helpline)',
               data: xy(remoteEst),
               borderColor: c.gold,
-              backgroundColor: 'transparent',
-              borderWidth: 2.5,
-              pointRadius: 2.5,
-              pointHoverRadius: 5,
-              fill: false,
+              backgroundColor: goldGradient,
+              borderWidth: 3,
+              pointRadius: 3,
+              pointBackgroundColor: c.gold,
+              pointBorderColor: '#fff',
+              pointBorderWidth: 1.5,
+              pointHoverRadius: 8,
+              pointHoverBorderWidth: 3,
+              fill: true,
               tension: 0.35,
               order: 1,
             },
@@ -1866,11 +1896,15 @@
               label: 'Walk-in Reporting',
               data: xy(walkinEst),
               borderColor: c.blue,
-              backgroundColor: 'transparent',
-              borderWidth: 2.5,
-              pointRadius: 2.5,
-              pointHoverRadius: 5,
-              fill: false,
+              backgroundColor: blueGradient,
+              borderWidth: 3,
+              pointRadius: 3,
+              pointBackgroundColor: c.blue,
+              pointBorderColor: '#fff',
+              pointBorderWidth: 1.5,
+              pointHoverRadius: 8,
+              pointHoverBorderWidth: 3,
+              fill: true,
               tension: 0.35,
               order: 1,
             },
@@ -1880,6 +1914,29 @@
           responsive: true,
           maintainAspectRatio: false,
           interaction: { mode: 'index', intersect: false },
+          animation: {
+            x: {
+              type: 'number',
+              easing: 'linear',
+              duration: 800,
+              from: NaN,
+              delay(ctx) {
+                if (ctx.type !== 'data' || ctx.xStarted) return 0;
+                ctx.xStarted = true;
+                return ctx.index * 25;
+              }
+            },
+            y: {
+              type: 'number',
+              easing: 'easeOutQuart',
+              duration: 800,
+              delay(ctx) {
+                if (ctx.type !== 'data' || ctx.yStarted) return 0;
+                ctx.yStarted = true;
+                return ctx.index * 25;
+              }
+            }
+          },
           plugins: {
             ...basePlugins(),
             legend: {
@@ -1901,8 +1958,14 @@
     }
 
     function initChart2() {
-      const ctx = document.getElementById('chart2').getContext('2d');
+      const canvas = document.getElementById('chart2');
+      const ctx = canvas.getContext('2d');
       const c = chartColors();
+
+      const blueGradient = ctx.createLinearGradient(0, 0, 0, 400);
+      blueGradient.addColorStop(0, 'rgba(0, 43, 92, 0.25)');
+      blueGradient.addColorStop(1, 'rgba(0, 43, 92, 0)');
+
       const chart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -1931,11 +1994,15 @@
               label: 'Net GBV Reporting Effect',
               data: xy(netEst),
               borderColor: c.blue,
-              backgroundColor: 'transparent',
-              borderWidth: 2.5,
-              pointRadius: 2.5,
-              pointHoverRadius: 5,
-              fill: false,
+              backgroundColor: blueGradient,
+              borderWidth: 3,
+              pointRadius: 3,
+              pointBackgroundColor: c.blue,
+              pointBorderColor: '#fff',
+              pointBorderWidth: 1.5,
+              pointHoverRadius: 8,
+              pointHoverBorderWidth: 3,
+              fill: true,
               tension: 0.35,
               order: 1,
             },
@@ -1945,6 +2012,29 @@
           responsive: true,
           maintainAspectRatio: false,
           interaction: { mode: 'index', intersect: false },
+          animation: {
+            x: {
+              type: 'number',
+              easing: 'linear',
+              duration: 800,
+              from: NaN,
+              delay(ctx) {
+                if (ctx.type !== 'data' || ctx.xStarted) return 0;
+                ctx.xStarted = true;
+                return ctx.index * 25;
+              }
+            },
+            y: {
+              type: 'number',
+              easing: 'easeOutQuart',
+              duration: 800,
+              delay(ctx) {
+                if (ctx.type !== 'data' || ctx.yStarted) return 0;
+                ctx.yStarted = true;
+                return ctx.index * 25;
+              }
+            }
+          },
           plugins: {
             ...basePlugins(),
             legend: {
@@ -1966,8 +2056,14 @@
     }
 
     function initChart3() {
-      const ctx = document.getElementById('chart3').getContext('2d');
+      const canvas = document.getElementById('chart3');
+      const ctx = canvas.getContext('2d');
       const c = chartColors();
+
+      const tealGradient = ctx.createLinearGradient(0, 0, 0, 400);
+      tealGradient.addColorStop(0, 'rgba(13, 148, 136, 0.25)');
+      tealGradient.addColorStop(1, 'rgba(13, 148, 136, 0)');
+
       const chart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -1996,11 +2092,15 @@
               label: 'FIR Registrations',
               data: xy(firEst),
               borderColor: c.teal,
-              backgroundColor: 'transparent',
-              borderWidth: 2.5,
-              pointRadius: 2.5,
-              pointHoverRadius: 5,
-              fill: false,
+              backgroundColor: tealGradient,
+              borderWidth: 3,
+              pointRadius: 3,
+              pointBackgroundColor: c.teal,
+              pointBorderColor: '#fff',
+              pointBorderWidth: 1.5,
+              pointHoverRadius: 8,
+              pointHoverBorderWidth: 3,
+              fill: true,
               tension: 0.35,
               order: 1,
             },
@@ -2010,6 +2110,29 @@
           responsive: true,
           maintainAspectRatio: false,
           interaction: { mode: 'index', intersect: false },
+          animation: {
+            x: {
+              type: 'number',
+              easing: 'linear',
+              duration: 800,
+              from: NaN,
+              delay(ctx) {
+                if (ctx.type !== 'data' || ctx.xStarted) return 0;
+                ctx.xStarted = true;
+                return ctx.index * 25;
+              }
+            },
+            y: {
+              type: 'number',
+              easing: 'easeOutQuart',
+              duration: 800,
+              delay(ctx) {
+                if (ctx.type !== 'data' || ctx.yStarted) return 0;
+                ctx.yStarted = true;
+                return ctx.index * 25;
+              }
+            }
+          },
           plugins: {
             ...basePlugins(),
             legend: {
@@ -2058,7 +2181,8 @@
             backgroundColor: barColors,
             borderColor: isSignif.map(s => s ? c.gold : (html.getAttribute('data-theme') === 'dark' ? '#6b7280' : '#9ca3af')),
             borderWidth: 1.5,
-            borderRadius: 3,
+            borderRadius: 6,
+            hoverBackgroundColor: isSignif.map(s => s ? c.gold : (html.getAttribute('data-theme') === 'dark' ? '#8b949e' : '#6b7280')),
           }],
           errorBars: errorBarsData,
         },
@@ -2066,6 +2190,17 @@
           indexAxis: 'y',
           responsive: true,
           maintainAspectRatio: false,
+          animation: {
+            x: {
+              duration: 1000,
+              easing: 'easeOutQuart',
+              delay(ctx) {
+                if (ctx.type !== 'data' || ctx.xStarted) return 0;
+                ctx.xStarted = true;
+                return ctx.index * 150;
+              }
+            }
+          },
           plugins: {
             ...basePlugins(),
             verticalZeroLine: { enabled: true },
@@ -2144,9 +2279,9 @@
     function updateAllChartThemes() {
       const c = chartColors();
 
-      allCharts.forEach(({ chart, type }) => {
+      allCharts.forEach(({ chart, type, id }) => {
         const isDark = html.getAttribute('data-theme') === 'dark';
-        const { options, data } = chart;
+        const { options, data, ctx } = chart;
 
         // Update scales
         ['x','y'].forEach(axis => {
@@ -2167,18 +2302,39 @@
           options.plugins.tooltip.borderColor = c.tooltipBorder;
         }
 
+        // Recreate Gradients
+        const gGold = ctx.createLinearGradient(0, 0, 0, 400);
+        gGold.addColorStop(0, 'rgba(201, 151, 0, 0.25)');
+        gGold.addColorStop(1, 'rgba(201, 151, 0, 0)');
+
+        const gBlue = ctx.createLinearGradient(0, 0, 0, 400);
+        gBlue.addColorStop(0, 'rgba(0, 43, 92, 0.2)');
+        gBlue.addColorStop(1, 'rgba(0, 43, 92, 0)');
+
+        const gTeal = ctx.createLinearGradient(0, 0, 0, 400);
+        gTeal.addColorStop(0, 'rgba(13, 148, 136, 0.2)');
+        gTeal.addColorStop(1, 'rgba(13, 148, 136, 0)');
+
         // Update dataset colors
         if (type === 'event1') {
           data.datasets[0].backgroundColor = c.goldCi;
           data.datasets[2].backgroundColor = c.blueCi;
           data.datasets[4].borderColor = c.gold;
+          data.datasets[4].backgroundColor = gGold;
+          data.datasets[4].pointBackgroundColor = c.gold;
           data.datasets[5].borderColor = c.blue;
+          data.datasets[5].backgroundColor = gBlue;
+          data.datasets[5].pointBackgroundColor = c.blue;
         } else if (type === 'event2') {
           data.datasets[0].backgroundColor = c.blueCi;
           data.datasets[2].borderColor = c.blue;
+          data.datasets[2].backgroundColor = gBlue;
+          data.datasets[2].pointBackgroundColor = c.blue;
         } else if (type === 'event3') {
           data.datasets[0].backgroundColor = c.tealCi;
           data.datasets[2].borderColor = c.teal;
+          data.datasets[2].backgroundColor = gTeal;
+          data.datasets[2].pointBackgroundColor = c.teal;
         } else if (type === 'hetero') {
           const errorBarsData = data.errorBars;
           const isSignif = errorBarsData.map(e => e.low > 0);
@@ -2190,6 +2346,7 @@
             ? c.gold
             : (isDark ? '#6b7280' : '#9ca3af')
           );
+          data.datasets[0].hoverBackgroundColor = isSignif.map(s => s ? c.gold : (isDark ? '#8b949e' : '#6b7280'));
         }
 
         chart.update('none');
