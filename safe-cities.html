@@ -877,6 +877,46 @@
     }
 
     /* ============================================================
+       CHART SCROLLYTELLING GRID
+    ============================================================ */
+    .charts-scrolly-grid {
+      display: grid;
+      grid-template-columns: 2fr 3fr;
+      gap: 4rem;
+      align-items: start;
+      margin-top: 2rem;
+    }
+    @media (max-width: 768px) {
+      .charts-scrolly-grid { grid-template-columns: 1fr; }
+    }
+
+    .chart-trigger {
+      min-height: 65vh;
+      display: flex;
+      align-items: center;
+      padding: 2rem 0;
+    }
+
+    .chart-block[data-chart] {
+      opacity: 0;
+      transform: translateY(32px);
+      transition:
+        opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .chart-block[data-chart].revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .chart-block[data-chart] {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+    }
+
+    /* ============================================================
        DIVIDER / MISC
     ============================================================ */
     .section-divider {
@@ -1133,68 +1173,112 @@
         <h2 class="section-title">Event-Study Results</h2>
         <p class="section-intro">Difference-in-differences event study plots showing effects relative to the WVPS launch (t = 0). Pre-trends test the parallel trends assumption. Charts are illustrative reconstructions of paper figures.</p>
 
-        <!-- Plot 1 — Remote vs Walk-in -->
-        <div class="chart-block scroll-reveal">
-          <div class="chart-header">
-            <h3 class="chart-title">Figure 1 — GBV Reporting: Remote vs. Walk-in</h3>
-            <p class="chart-caption">DiD estimates relative to one month before WVPS launch. Shaded bands = 95% confidence intervals.</p>
-          </div>
-          <div class="chart-wrap">
-            <canvas id="chart1"></canvas>
-          </div>
-          <div class="chart-interpretation">
-            <strong>What this means:</strong> After the WVPS launched, remote reporting via the 15 helpline surged while walk-in reporting at police stations fell. The pre-period flat trends support the parallel trends assumption underlying the DiD design. The opposing movements reveal a fundamental <em>substitution effect</em> in how women engage the justice system — not merely more reports, but different reporting channels.
-          </div>
-          <p class="chart-note">Reconstructed from paper figures. Download full paper for exact estimates: <a href="https://doi.org/10.7274/31919538" target="_blank" rel="noopener noreferrer">DOI link</a></p>
-        </div>
+        <!-- Scrollytelling grid: sticky narrative left, scrolling charts right -->
+        <div class="charts-scrolly-grid">
 
-        <!-- Plot 2 — Net Effect -->
-        <div class="chart-block scroll-reveal">
-          <div class="chart-header">
-            <h3 class="chart-title">Figure 2 — Net GBV Reporting Effect</h3>
-            <p class="chart-caption">Combined net effect on total reported GBV across all channels. Shaded band = 95% confidence interval.</p>
-          </div>
-          <div class="chart-wrap">
-            <canvas id="chart2"></canvas>
-          </div>
-          <div class="chart-interpretation">
-            <strong>What this means:</strong> Despite the substitution effect, the WVPS produces a <em>positive net increase</em> in total GBV reporting. Remote reporting growth exceeds the decline in walk-in reporting, yielding a meaningful aggregate increase. Pre-trends are flat and indistinguishable from zero, strengthening the causal interpretation of post-treatment effects.
-          </div>
-          <p class="chart-note">Reconstructed from paper figures. Download full paper for exact estimates: <a href="https://doi.org/10.7274/31919538" target="_blank" rel="noopener noreferrer">DOI link</a></p>
-        </div>
+          <!-- Sticky left column: narrative panels -->
+          <div class="problem-sticky-col" aria-hidden="true">
+            <div class="sticky-panel">
 
-        <div class="charts-grid-2">
+              <div class="panel-content active" id="sticky-chart-a">
+                <div class="panel-number">01 · Remote vs Walk-in</div>
+                <div class="panel-title">Two Channels, Opposite Directions</div>
+                <div class="panel-body">When the WVPS launched, remote phone-based reporting surged while walk-in visits to police stations declined. This is the substitution effect — women switching to safer reporting pathways, not just reporting more.</div>
+              </div>
 
-          <!-- Plot 3 — FIR Pipeline -->
-          <div class="chart-block scroll-reveal" style="margin-bottom:0">
-            <div class="chart-header">
-              <h3 class="chart-title">Figure 3 — FIR Registration</h3>
-              <p class="chart-caption">Effect on First Information Report registrations downstream.</p>
+              <div class="panel-content" id="sticky-chart-b">
+                <div class="panel-number">02 · Net Effect</div>
+                <div class="panel-title">A Net Increase in Reporting</div>
+                <div class="panel-body">Even accounting for substitution, total reported GBV rises after the reform. The pre-trend is flat, confirming the post-treatment increase is caused by the WVPS — not pre-existing trends.</div>
+              </div>
+
+              <div class="panel-content" id="sticky-chart-c">
+                <div class="panel-number">03 · FIR Pipeline</div>
+                <div class="panel-title">The Pipeline Bottleneck</div>
+                <div class="panel-body">Formal case registration (FIRs) also increases, but the effect is smaller than the reporting increase. Digital intake alone cannot fix the full system — discretion at later stages still constrains justice delivery.</div>
+              </div>
+
+              <div class="panel-content" id="sticky-chart-d">
+                <div class="panel-number">04 · Heterogeneity</div>
+                <div class="panel-title">Where Effects Are Concentrated</div>
+                <div class="panel-body">Effects are largest for Domestic Violence and Harassment — the categories where household control and social stigma are most binding. This is consistent with the WVPS reducing barriers specific to those crimes.</div>
+              </div>
+
             </div>
-            <div class="chart-wrap" style="height:280px">
-              <canvas id="chart3"></canvas>
-            </div>
-            <div class="chart-interpretation">
-              <strong>What this means:</strong> The digital intake produces measurable downstream movement: formal FIR registration increases post-WVPS. The effect is positive but of smaller magnitude than the reporting increase, consistent with pipeline bottlenecks and existing capacity constraints at the local level.
-            </div>
-            <p class="chart-note">Illustrative reconstruction. <a href="https://doi.org/10.7274/31919538" target="_blank" rel="noopener noreferrer">Full paper ↗</a></p>
           </div>
 
-          <!-- Plot 4 — Heterogeneity -->
-          <div class="chart-block scroll-reveal delay-2" style="margin-bottom:0">
-            <div class="chart-header">
-              <h3 class="chart-title">Figure 4 — Crime Category Heterogeneity</h3>
-              <p class="chart-caption">DiD estimates by GBV crime type. Gold bars = significant at 95%; gray = not significant.</p>
-            </div>
-            <div class="chart-wrap" style="height:280px">
-              <canvas id="chart4"></canvas>
-            </div>
-            <div class="chart-interpretation">
-              <strong>What this means:</strong> Effects are concentrated in Domestic Violence and Harassment — categories where household surveillance and social stigma are most binding. The WVPS specifically benefits women facing the highest exit barriers to in-person reporting.
-            </div>
-            <p class="chart-note">Illustrative reconstruction. <a href="https://doi.org/10.7274/31919538" target="_blank" rel="noopener noreferrer">Full paper ↗</a></p>
-          </div>
+          <!-- Scrolling right column: chart blocks -->
+          <div class="problem-scroll-col">
 
+            <!-- Chart 1 trigger -->
+            <div class="chart-trigger" data-panel="chart-a">
+              <div class="chart-block" data-chart="chart1">
+                <div class="chart-header">
+                  <h3 class="chart-title">Figure 1 — GBV Reporting: Remote vs. Walk-in</h3>
+                  <p class="chart-caption">DiD estimates relative to one month before WVPS launch. Shaded bands = 95% confidence intervals.</p>
+                </div>
+                <div class="chart-wrap">
+                  <canvas id="chart1"></canvas>
+                </div>
+                <div class="chart-interpretation">
+                  <strong>What this means:</strong> After the WVPS launched, remote reporting via the 15 helpline surged while walk-in reporting at police stations fell. The pre-period flat trends support the parallel trends assumption underlying the DiD design. The opposing movements reveal a fundamental <em>substitution effect</em> in how women engage the justice system — not merely more reports, but different reporting channels.
+                </div>
+                <p class="chart-note">Reconstructed from paper figures. Download full paper for exact estimates: <a href="https://doi.org/10.7274/31919538" target="_blank" rel="noopener noreferrer">DOI link</a></p>
+              </div>
+            </div>
+
+            <!-- Chart 2 trigger -->
+            <div class="chart-trigger" data-panel="chart-b">
+              <div class="chart-block" data-chart="chart2">
+                <div class="chart-header">
+                  <h3 class="chart-title">Figure 2 — Net GBV Reporting Effect</h3>
+                  <p class="chart-caption">Combined net effect on total reported GBV across all channels. Shaded band = 95% confidence interval.</p>
+                </div>
+                <div class="chart-wrap">
+                  <canvas id="chart2"></canvas>
+                </div>
+                <div class="chart-interpretation">
+                  <strong>What this means:</strong> Despite the substitution effect, the WVPS produces a <em>positive net increase</em> in total GBV reporting. Remote reporting growth exceeds the decline in walk-in reporting, yielding a meaningful aggregate increase. Pre-trends are flat and indistinguishable from zero, strengthening the causal interpretation of post-treatment effects.
+                </div>
+                <p class="chart-note">Reconstructed from paper figures. Download full paper for exact estimates: <a href="https://doi.org/10.7274/31919538" target="_blank" rel="noopener noreferrer">DOI link</a></p>
+              </div>
+            </div>
+
+            <!-- Chart 3 trigger -->
+            <div class="chart-trigger" data-panel="chart-c">
+              <div class="chart-block" data-chart="chart3">
+                <div class="chart-header">
+                  <h3 class="chart-title">Figure 3 — FIR Registration</h3>
+                  <p class="chart-caption">Effect on First Information Report registrations downstream.</p>
+                </div>
+                <div class="chart-wrap" style="height:280px">
+                  <canvas id="chart3"></canvas>
+                </div>
+                <div class="chart-interpretation">
+                  <strong>What this means:</strong> The digital intake produces measurable downstream movement: formal FIR registration increases post-WVPS. The effect is positive but of smaller magnitude than the reporting increase, consistent with pipeline bottlenecks and existing capacity constraints at the local level.
+                </div>
+                <p class="chart-note">Illustrative reconstruction. <a href="https://doi.org/10.7274/31919538" target="_blank" rel="noopener noreferrer">Full paper ↗</a></p>
+              </div>
+            </div>
+
+            <!-- Chart 4 trigger -->
+            <div class="chart-trigger" data-panel="chart-d">
+              <div class="chart-block" data-chart="chart4">
+                <div class="chart-header">
+                  <h3 class="chart-title">Figure 4 — Crime Category Heterogeneity</h3>
+                  <p class="chart-caption">DiD estimates by GBV crime type. Gold bars = significant at 95%; gray = not significant.</p>
+                </div>
+                <div class="chart-wrap" style="height:280px">
+                  <canvas id="chart4"></canvas>
+                </div>
+                <div class="chart-interpretation">
+                  <strong>What this means:</strong> Effects are concentrated in Domestic Violence and Harassment — categories where household surveillance and social stigma are most binding. The WVPS specifically benefits women facing the highest exit barriers to in-person reporting.
+                </div>
+                <p class="chart-note">Illustrative reconstruction. <a href="https://doi.org/10.7274/31919538" target="_blank" rel="noopener noreferrer">Full paper ↗</a></p>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
     </section>
@@ -1491,6 +1575,38 @@
     }
 
     /* -------------------------------------------------------
+       CHART SECTION STICKY PANELS
+    ------------------------------------------------------- */
+    const chartStickyPanels = {
+      'chart-a': document.getElementById('sticky-chart-a'),
+      'chart-b': document.getElementById('sticky-chart-b'),
+      'chart-c': document.getElementById('sticky-chart-c'),
+      'chart-d': document.getElementById('sticky-chart-d'),
+    };
+    let currentChartPanel = 'chart-a';
+
+    function setActiveChartPanel(id) {
+      if (id === currentChartPanel) return;
+      const prev = chartStickyPanels[currentChartPanel];
+      const next = chartStickyPanels[id];
+      if (!next) return;
+      if (prev) { prev.classList.remove('active'); prev.style.position = 'absolute'; }
+      next.style.position = 'relative';
+      next.classList.add('active');
+      currentChartPanel = id;
+    }
+
+    if (!reducedMotion) {
+      const chartStickyObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) setActiveChartPanel(entry.target.dataset.panel);
+        });
+      }, { threshold: 0, rootMargin: '-45% 0px -45% 0px' });
+
+      document.querySelectorAll('.chart-trigger[data-panel]').forEach(t => chartStickyObserver.observe(t));
+    }
+
+    /* -------------------------------------------------------
        CHART.JS SETUP
     ------------------------------------------------------- */
 
@@ -1689,16 +1805,15 @@
     // Track all charts for theme updates
     const allCharts = [];
 
-    /* ------ CHART 1: Remote vs Walk-in ------ */
-    (function () {
+    /* ------ Named init functions (called lazily on scroll) ------ */
+
+    function initChart1() {
       const ctx = document.getElementById('chart1').getContext('2d');
       const c = chartColors();
-
       const chart = new Chart(ctx, {
         type: 'line',
         data: {
           datasets: [
-            // Remote CI band
             {
               label: 'CI Upper (remote)',
               data: xy(remoteHigh),
@@ -1719,7 +1834,6 @@
               tension: 0.35,
               order: 3,
             },
-            // Walk-in CI band
             {
               label: 'CI Upper (walk-in)',
               data: xy(walkinHigh),
@@ -1740,7 +1854,6 @@
               tension: 0.35,
               order: 3,
             },
-            // Main lines
             {
               label: 'Remote Reporting (15 Helpline)',
               data: xy(remoteEst),
@@ -1787,15 +1900,13 @@
           },
         }
       });
+      chart.resize();
+      allCharts.push({ chart, type: 'event1', id: 'chart1' });
+    }
 
-      allCharts.push({ chart, type: 'event1' });
-    })();
-
-    /* ------ CHART 2: Net Effect ------ */
-    (function () {
+    function initChart2() {
       const ctx = document.getElementById('chart2').getContext('2d');
       const c = chartColors();
-
       const chart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -1854,15 +1965,13 @@
           },
         }
       });
+      chart.resize();
+      allCharts.push({ chart, type: 'event2', id: 'chart2' });
+    }
 
-      allCharts.push({ chart, type: 'event2' });
-    })();
-
-    /* ------ CHART 3: FIR Registration ------ */
-    (function () {
+    function initChart3() {
       const ctx = document.getElementById('chart3').getContext('2d');
       const c = chartColors();
-
       const chart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -1921,15 +2030,13 @@
           },
         }
       });
+      chart.resize();
+      allCharts.push({ chart, type: 'event3', id: 'chart3' });
+    }
 
-      allCharts.push({ chart, type: 'event3' });
-    })();
-
-    /* ------ CHART 4: Heterogeneity (horizontal bar) ------ */
-    (function () {
+    function initChart4() {
       const ctx = document.getElementById('chart4').getContext('2d');
       const c = chartColors();
-
       const categories  = ['Other GBV','Kidnapping','Assault','Threats','Harassment','Domestic Violence'];
       const estimates   = [1.2, 2.4, 1.8, 3.1, 7.4, 9.2];
       const errorBarsData = [
@@ -1940,13 +2047,11 @@
         { low:  5.2, high: 9.6 },
         { low:  7.1, high: 11.3 },
       ];
-
       const isSignif = errorBarsData.map(e => e.low > 0);
       const barColors = isSignif.map(s => s
         ? (c.gold + 'CC')
         : (html.getAttribute('data-theme') === 'dark' ? 'rgba(107,114,128,0.45)' : 'rgba(156,163,175,0.5)')
       );
-
       const chart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -2001,9 +2106,41 @@
           }
         }
       });
+      chart.resize();
+      allCharts.push({ chart, type: 'hetero', id: 'chart4' });
+    }
 
-      allCharts.push({ chart, type: 'hetero' });
-    })();
+    /* ------ Lazy chart init observer ------ */
+    const chartInitMap = {
+      'chart1': initChart1,
+      'chart2': initChart2,
+      'chart3': initChart3,
+      'chart4': initChart4,
+    };
+    const initializedCharts = new Set();
+
+    if (reducedMotion) {
+      Object.values(chartInitMap).forEach(fn => fn());
+      document.querySelectorAll('.chart-block[data-chart]').forEach(el => {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      });
+    } else {
+      const chartObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const id = entry.target.dataset.chart;
+          if (id && chartInitMap[id] && !initializedCharts.has(id)) {
+            initializedCharts.add(id);
+            chartInitMap[id]();
+            entry.target.classList.add('revealed');
+            chartObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+      document.querySelectorAll('.chart-block[data-chart]').forEach(el => chartObserver.observe(el));
+    }
 
     /* -------------------------------------------------------
        THEME-AWARE CHART UPDATES
