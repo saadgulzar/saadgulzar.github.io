@@ -8,7 +8,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Inter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
@@ -39,8 +39,8 @@
       --radius-md:  12px;
       --radius-lg:  20px;
 
-      --font-display: 'Playfair Display', Georgia, serif;
-      --font-body:    'Lato', system-ui, sans-serif;
+      --font-display: 'Newsreader', Georgia, serif;
+      --font-body:    'Inter', system-ui, sans-serif;
 
       --max-w: 1200px;
       --section-py: 6rem;
@@ -1634,7 +1634,7 @@
 
         // Label "WVPS Launch" above the line
         ctx.fillStyle = isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.4)';
-        ctx.font = '10px Lato, sans-serif';
+        ctx.font = '10px Inter, sans-serif';
         ctx.textAlign = 'center';
         ctx.fillText('WVPS Launch', xPos, chartArea.top - 4);
         ctx.restore();
@@ -1715,8 +1715,8 @@
       const c = chartColors();
       return {
         grid:   { color: c.grid, drawBorder: false },
-        ticks:  { color: c.text, font: { family: 'Lato, sans-serif', size: 11 } },
-        title:  { display: !!label, text: label || '', color: c.muted, font: { family: 'Lato, sans-serif', size: 11 } },
+        ticks:  { color: c.text, font: { family: 'Inter, sans-serif', size: 11 } },
+        title:  { display: !!label, text: label || '', color: c.muted, font: { family: 'Inter, sans-serif', size: 11 } },
         border: { display: false },
       };
     }
@@ -1727,7 +1727,7 @@
         legend: {
           labels: {
             color: c.text,
-            font: { family: 'Lato, sans-serif', size: 12 },
+            font: { family: 'Inter, sans-serif', size: 12 },
             boxWidth: 14,
             boxHeight: 14,
             filter: (item) => !item.text.includes('CI '),
@@ -1778,7 +1778,7 @@
         grid: { color: c.grid, drawBorder: false },
         ticks: {
           color: c.text,
-          font: { family: 'Lato, sans-serif', size: 11 },
+          font: { family: 'Inter, sans-serif', size: 11 },
           stepSize: 3,
           callback: (v) => v === 0 ? 't=0' : v,
         },
@@ -1786,7 +1786,7 @@
           display: true,
           text: 'Months relative to WVPS launch',
           color: c.muted,
-          font: { family: 'Lato, sans-serif', size: 11 },
+          font: { family: 'Inter, sans-serif', size: 11 },
         },
         border: { display: false },
       };
@@ -1796,8 +1796,8 @@
       const c = chartColors();
       return {
         grid: { color: c.grid, drawBorder: false },
-        ticks: { color: c.text, font: { family: 'Lato, sans-serif', size: 11 } },
-        title: { display: true, text: label, color: c.muted, font: { family: 'Lato, sans-serif', size: 11 } },
+        ticks: { color: c.text, font: { family: 'Inter, sans-serif', size: 11 } },
+        title: { display: true, text: label, color: c.muted, font: { family: 'Inter, sans-serif', size: 11 } },
         border: { display: false },
       };
     }
@@ -2094,13 +2094,13 @@
               type: 'linear',
               min: -3, max: 14,
               grid: { color: c.grid, drawBorder: false },
-              ticks: { color: c.text, font: { family: 'Lato, sans-serif', size: 10 } },
-              title: { display: true, text: 'DiD Estimate', color: c.muted, font: { family: 'Lato, sans-serif', size: 11 } },
+              ticks: { color: c.text, font: { family: 'Inter, sans-serif', size: 10 } },
+              title: { display: true, text: 'DiD Estimate', color: c.muted, font: { family: 'Inter, sans-serif', size: 11 } },
               border: { display: false },
             },
             y: {
               grid: { display: false },
-              ticks: { color: c.text, font: { family: 'Lato, sans-serif', size: 11 } },
+              ticks: { color: c.text, font: { family: 'Inter, sans-serif', size: 11 } },
               border: { display: false },
             }
           }
