@@ -1,268 +1,2069 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saad Gulzar - Digital Access to Justice</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Access to Justice — Saad Gulzar</title>
+  <meta name="description" content="Evidence from Women's Virtual Police Stations in Pakistan — Scrollytelling Research Page">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Lato', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif'],
-                    },
-                    colors: {
-                        ndblue: '#002b5c',
-                        ndgold: '#c99700',
-                    }
-                }
-            }
-        }
-    </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    /* ============================================================
+       CUSTOM PROPERTIES
+    ============================================================ */
+    :root {
+      --nd-blue:       #002b5c;
+      --nd-gold:       #c99700;
+      --nd-gold-light: rgba(201, 151, 0, 0.15);
 
-    <style>
-        body { background-color: #fdfdfd; }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
+      --color-bg:       #f9f8f5;
+      --color-surface:  #ffffff;
+      --color-surface2: #f3f1ec;
+      --color-text:     #1a1a2e;
+      --color-muted:    #6b7280;
+      --color-divider:  #e5e7eb;
+      --color-hero-bg:  #001d40;
+      --color-badge-bg: rgba(255,255,255,0.10);
+      --color-link:     var(--nd-blue);
+
+      --shadow-sm:  0 1px 4px rgba(0,0,0,0.06);
+      --shadow-md:  0 4px 16px rgba(0,0,0,0.09);
+      --shadow-lg:  0 8px 32px rgba(0,0,0,0.12);
+
+      --radius-sm:  6px;
+      --radius-md:  12px;
+      --radius-lg:  20px;
+
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Lato', system-ui, sans-serif;
+
+      --max-w: 1200px;
+      --section-py: 6rem;
+      --header-h: 60px;
+    }
+
+    [data-theme="dark"] {
+      --color-bg:       #0d1117;
+      --color-surface:  #161b22;
+      --color-surface2: #1c2128;
+      --color-text:     #e6edf3;
+      --color-muted:    #8b949e;
+      --color-divider:  #30363d;
+      --color-hero-bg:  #020d1a;
+      --color-badge-bg: rgba(255,255,255,0.08);
+      --color-link:     #6eaee7;
+      --shadow-sm:  0 1px 4px rgba(0,0,0,0.3);
+      --shadow-md:  0 4px 16px rgba(0,0,0,0.4);
+      --shadow-lg:  0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    /* ============================================================
+       RESET / BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.7;
+      transition: background 0.3s, color 0.3s;
+      overflow-x: hidden;
+    }
+
+    h1,h2,h3,h4,h5 { font-family: var(--font-display); line-height: 1.25; }
+    a { color: var(--color-link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { max-width: 100%; }
+
+    /* ============================================================
+       READING PROGRESS BAR
+    ============================================================ */
+    #progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      width: 0%;
+      background: var(--nd-gold);
+      z-index: 9999;
+      transition: width 0.1s linear;
+    }
+
+    /* ============================================================
+       HEADER
+    ============================================================ */
+    #site-header {
+      position: sticky;
+      top: 3px;
+      z-index: 900;
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-divider);
+      box-shadow: var(--shadow-sm);
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    #site-header nav {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      height: var(--header-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .back-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 0.875rem;
+      color: var(--nd-blue);
+      transition: color 0.2s;
+    }
+    [data-theme="dark"] .back-link { color: #6eaee7; }
+    .back-link:hover { color: var(--nd-gold); text-decoration: none; }
+
+    .nav-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--color-text);
+    }
+
+    #theme-toggle {
+      background: var(--color-surface2);
+      border: 1px solid var(--color-divider);
+      color: var(--color-muted);
+      border-radius: 50%;
+      width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+    #theme-toggle:hover { background: var(--nd-gold); color: #fff; transform: rotate(20deg); }
+
+    /* ============================================================
+       HERO
+    ============================================================ */
+    #hero {
+      min-height: 100svh;
+      background: var(--color-hero-bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 1.5rem 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,151,0,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 20% 100%, rgba(0,43,92,0.6) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-inner { position: relative; max-width: 760px; }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 0.3rem 1rem;
+      background: var(--color-badge-bg);
+      border: 1px solid rgba(201,151,0,0.4);
+      border-radius: 100px;
+      color: var(--nd-gold);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title {
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 1rem;
+      line-height: 1.15;
+    }
+
+    .hero-subtitle {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: clamp(1.1rem, 3vw, 1.5rem);
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.8rem;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+      text-decoration: none;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); text-decoration: none; }
+
+    .btn-primary {
+      background: var(--nd-gold);
+      color: #fff;
+    }
+    .btn-primary:hover { background: #b38600; }
+
+    .btn-outline {
+      background: rgba(255,255,255,0.10);
+      color: #fff;
+      border: 1.5px solid rgba(255,255,255,0.35);
+    }
+    .btn-outline:hover { background: rgba(255,255,255,0.18); }
+
+    .hero-pdf-link {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.45);
+      margin-top: 0.75rem;
+    }
+    .hero-pdf-link a { color: rgba(255,255,255,0.55); text-decoration: underline; }
+
+    .hero-authors {
+      margin-top: 3rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.4rem 1.5rem;
+    }
+
+    .hero-author {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.55);
+    }
+    .hero-author-name { color: rgba(255,255,255,0.85); font-weight: 700; }
+
+    /* ============================================================
+       SECTION WRAPPERS
+    ============================================================ */
+    .section {
+      padding: var(--section-py) 1.5rem;
+    }
+
+    .section-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--nd-gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.7rem, 4vw, 2.5rem);
+      color: var(--color-text);
+      margin-bottom: 1.25rem;
+    }
+
+    .section-intro {
+      font-size: 1.1rem;
+      color: var(--color-muted);
+      max-width: 640px;
+      margin-bottom: 3.5rem;
+      line-height: 1.75;
+    }
+
+    /* Alternating section backgrounds */
+    .section--alt { background: var(--color-surface2); }
+
+    /* ============================================================
+       SCROLL REVEAL
+    ============================================================ */
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition:
+        opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .scroll-reveal.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .scroll-reveal.delay-1 { transition-delay: 0.1s; }
+    .scroll-reveal.delay-2 { transition-delay: 0.2s; }
+    .scroll-reveal.delay-3 { transition-delay: 0.3s; }
+    .scroll-reveal.delay-4 { transition-delay: 0.4s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .scroll-reveal {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+      html { scroll-behavior: auto; }
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
+    /* ============================================================
+       THE PROBLEM — STICKY PANEL
+    ============================================================ */
+    #problem {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .problem-header {
+      padding: var(--section-py) 1.5rem 3rem;
+    }
+
+    .problem-grid {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+      padding: 0 1.5rem;
+      padding-bottom: var(--section-py);
+    }
+
+    .problem-sticky-col {
+      position: sticky;
+      top: calc(var(--header-h) + 3px + 2rem);
+      height: calc(100svh - var(--header-h) - 5rem);
+      display: flex;
+      align-items: center;
+    }
+
+    .sticky-panel {
+      background: var(--nd-blue);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    [data-theme="dark"] .sticky-panel { background: #0a1929; border: 1px solid #1e3a5a; }
+
+    .sticky-panel::before {
+      content: '';
+      position: absolute;
+      bottom: -30px; right: -30px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: rgba(201,151,0,0.08);
+    }
+
+    .panel-content {
+      position: absolute;
+      inset: 0;
+      padding: 2.5rem;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .panel-content.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+      position: relative;
+    }
+
+    .panel-icon {
+      width: 60px; height: 60px;
+      background: rgba(201,151,0,0.18);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      color: var(--nd-gold);
+      margin-bottom: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .panel-number {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--nd-gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .panel-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+
+    .panel-body { font-size: 0.95rem; color: rgba(255,255,255,0.72); line-height: 1.75; }
+
+    .panel-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .panel-tag {
+      padding: 0.3rem 0.75rem;
+      background: rgba(255,255,255,0.08);
+      border-radius: 100px;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.65);
+    }
+
+    .problem-scroll-col { padding: 1rem 0; }
+
+    .problem-trigger {
+      min-height: 65vh;
+      display: flex;
+      align-items: center;
+      padding: 2rem 0;
+    }
+
+    .trigger-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      border: 1px solid var(--color-divider);
+      box-shadow: var(--shadow-sm);
+      width: 100%;
+    }
+
+    .trigger-step {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--nd-gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .trigger-heading {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 0.75rem;
+    }
+
+    .trigger-text { color: var(--color-muted); font-size: 0.95rem; line-height: 1.75; }
+
+    .trigger-list {
+      list-style: none;
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .trigger-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      font-size: 0.9rem;
+      color: var(--color-muted);
+    }
+    .trigger-list li i {
+      color: var(--nd-gold);
+      flex-shrink: 0;
+      margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .problem-grid { grid-template-columns: 1fr; gap: 0; }
+      .problem-sticky-col { display: none; }
+    }
+
+    /* ============================================================
+       METHODOLOGY CARDS
+    ============================================================ */
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .method-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-divider);
+      border-radius: var(--radius-md);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .method-card-icon {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, rgba(0,43,92,0.08), rgba(201,151,0,0.1));
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--nd-blue);
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    [data-theme="dark"] .method-card-icon { color: #6eaee7; background: rgba(110,174,231,0.12); }
+
+    .method-card h4 {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      color: var(--color-text);
+      margin-bottom: 0.5rem;
+    }
+    .method-card p { font-size: 0.9rem; color: var(--color-muted); line-height: 1.7; }
+
+    .method-doi-note {
+      margin-top: 2.5rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--color-surface);
+      border-left: 4px solid var(--nd-gold);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 0.9rem;
+      color: var(--color-muted);
+    }
+    .method-doi-note a { color: var(--nd-gold); font-weight: 700; }
+
+    /* ============================================================
+       CHARTS SECTION
+    ============================================================ */
+    .chart-block {
+      background: var(--color-surface);
+      border: 1px solid var(--color-divider);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin-bottom: 3rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .chart-header { margin-bottom: 1.25rem; }
+
+    .chart-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: var(--color-text);
+      margin-bottom: 0.3rem;
+    }
+
+    .chart-caption { font-size: 0.875rem; color: var(--color-muted); }
+
+    .chart-wrap {
+      position: relative;
+      height: 360px;
+      margin-bottom: 1.25rem;
+    }
+    @media (max-width: 600px) { .chart-wrap { height: 260px; } }
+
+    .chart-interpretation {
+      padding: 1rem 1.25rem;
+      background: var(--color-surface2);
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      color: var(--color-muted);
+      line-height: 1.7;
+    }
+    .chart-interpretation strong { color: var(--color-text); }
+
+    .chart-note {
+      margin-top: 0.75rem;
+      font-size: 0.75rem;
+      color: var(--color-muted);
+      font-style: italic;
+    }
+    .chart-note a { color: var(--nd-gold); }
+
+    .charts-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    @media (max-width: 900px) { .charts-grid-2 { grid-template-columns: 1fr; } }
+
+    /* ============================================================
+       KEY FINDINGS
+    ============================================================ */
+    .findings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .finding-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      border: 1px solid var(--color-divider);
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+    }
+
+    .finding-icon-wrap {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.75rem;
+      margin: 0 auto 1.25rem;
+    }
+    .finding-icon-wrap.green  { background: rgba(5,150,105,0.1); color: #059669; }
+    .finding-icon-wrap.blue   { background: rgba(0,43,92,0.08); color: var(--nd-blue); }
+    .finding-icon-wrap.gold   { background: rgba(201,151,0,0.12); color: var(--nd-gold); }
+    .finding-icon-wrap.purple { background: rgba(124,58,237,0.1); color: #7c3aed; }
+    [data-theme="dark"] .finding-icon-wrap.blue { color: #6eaee7; background: rgba(110,174,231,0.12); }
+
+    .finding-headline {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      color: var(--color-text);
+      margin-bottom: 0.75rem;
+    }
+
+    .finding-body { font-size: 0.9rem; color: var(--color-muted); line-height: 1.7; }
+
+    /* ============================================================
+       ABSTRACT PANEL
+    ============================================================ */
+    .abstract-panel {
+      background: var(--color-surface);
+      border: 1px solid var(--color-divider);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 4rem;
+    }
+    .abstract-panel h3 { font-size: 1.4rem; color: var(--nd-blue); margin-bottom: 1rem; }
+    [data-theme="dark"] .abstract-panel h3 { color: #6eaee7; }
+    .abstract-panel p { font-size: 1rem; color: var(--color-muted); line-height: 1.85; margin-bottom: 1rem; }
+    .abstract-panel p:last-child { margin-bottom: 0; }
+    .abstract-callout {
+      margin-top: 1.25rem;
+      padding: 1rem 1.25rem;
+      background: rgba(0,43,92,0.05);
+      border-left: 4px solid var(--nd-blue);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 0.9rem;
+      color: var(--color-muted);
+    }
+    [data-theme="dark"] .abstract-callout { background: rgba(110,174,231,0.08); border-color: #6eaee7; }
+    .abstract-callout strong { color: var(--nd-blue); }
+    [data-theme="dark"] .abstract-callout strong { color: #6eaee7; }
+
+    /* ============================================================
+       MEDIA CARDS
+    ============================================================ */
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .media-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-divider);
+      border-radius: var(--radius-md);
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s, transform 0.2s;
+      text-decoration: none;
+      color: inherit;
+    }
+    .media-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); text-decoration: none; }
+
+    .media-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--nd-gold);
+    }
+    .media-badge.fb { color: #1877F2; }
+
+    .media-headline {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      color: var(--color-text);
+      line-height: 1.45;
+    }
+
+    .media-outlet { font-size: 0.8rem; color: var(--color-muted); }
+
+    .media-card-footer {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      color: var(--color-muted);
+    }
+    .media-card:hover .media-card-footer { color: var(--nd-blue); }
+    [data-theme="dark"] .media-card:hover .media-card-footer { color: #6eaee7; }
+
+    .media-doi-card {
+      background: linear-gradient(135deg, var(--nd-blue), #00407a);
+      border-color: transparent;
+      color: #fff;
+    }
+    .media-doi-card .media-badge { color: var(--nd-gold); }
+    .media-doi-card .media-headline { color: #fff; }
+    .media-doi-card .media-outlet { color: rgba(255,255,255,0.6); }
+    .media-doi-card .media-card-footer { color: rgba(255,255,255,0.5); }
+    .media-doi-card:hover .media-card-footer { color: var(--nd-gold); }
+    [data-theme="dark"] .media-doi-card { background: linear-gradient(135deg, #0a1929, #0e2a4a); border: 1px solid #1e3a5a; }
+
+    /* ============================================================
+       AUTHOR / TEAM
+    ============================================================ */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .author-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-divider);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .author-avatar {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, var(--nd-blue), #00407a);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .author-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--color-text);
+      margin-bottom: 0.25rem;
+    }
+    .author-affil { font-size: 0.78rem; color: var(--color-muted); line-height: 1.5; }
+
+    .partner-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-divider);
+      border-left: 4px solid var(--nd-gold);
+      border-radius: var(--radius-md);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+    }
+
+    .partner-icon {
+      width: 48px; height: 48px;
+      background: rgba(201,151,0,0.12);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--nd-gold);
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .partner-card h4 { font-family: var(--font-display); font-size: 1rem; color: var(--color-text); margin-bottom: 0.4rem; }
+    .partner-card p { font-size: 0.85rem; color: var(--color-muted); line-height: 1.65; }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      background: var(--nd-blue);
+      color: rgba(255,255,255,0.7);
+      padding: 3rem 1.5rem;
+    }
+    [data-theme="dark"] footer { background: #020d1a; }
+
+    .footer-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-back a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--nd-gold);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .footer-back a:hover { color: #fff; text-decoration: none; }
+
+    .footer-citation {
+      max-width: 640px;
+      font-size: 0.8rem;
+      line-height: 1.75;
+      padding: 1rem 1.25rem;
+      background: rgba(255,255,255,0.06);
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--nd-gold);
+    }
+    .footer-citation strong { color: rgba(255,255,255,0.85); }
+    .footer-citation a { color: var(--nd-gold); }
+
+    .footer-bottom {
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.78rem;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    /* ============================================================
+       DIVIDER / MISC
+    ============================================================ */
+    .section-divider {
+      width: 48px;
+      height: 3px;
+      background: var(--nd-gold);
+      border-radius: 2px;
+      margin-bottom: 1.25rem;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      background: var(--nd-gold-light);
+      color: var(--nd-gold);
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+  </style>
 </head>
 <body>
-    
-    <div id="root"></div>
 
-    <script type="text/babel">
-        const { useState } = React;
+  <!-- Reading progress bar -->
+  <div id="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemax="100" aria-label="Reading progress"></div>
 
-        const ProjectPage = () => {
-            const [activeTab, setActiveTab] = useState('overview');
+  <!-- Sticky header -->
+  <header id="site-header">
+    <nav>
+      <a href="index.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to Research
+      </a>
+      <span class="nav-title">Saad Gulzar</span>
+      <button id="theme-toggle" aria-label="Toggle dark/light mode">
+        <i class="fas fa-moon" id="theme-icon"></i>
+      </button>
+    </nav>
+  </header>
 
-            const authors = [
-                { name: "Bakhtawar Ali", affiliation: "Aix-Marseille School of Economics" },
-                { name: "Saad Gulzar", affiliation: "University of Notre Dame" },
-                { name: "Muhammad Yasir Khan", affiliation: "University of Pittsburgh" },
-                { name: "Muhammad Ahsan Yonus", affiliation: "Punjab Safe Cities Authority" },
-                { name: "Amna Baig", affiliation: "Punjab Safe Cities Authority" }
-            ];
+  <main>
 
-            return (
-                <div className="min-h-screen font-sans text-gray-800">
-                    
-                    {/* Minimal Header */}
-                    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-                        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-                            <a href="index.html" className="text-ndblue hover:text-ndgold font-semibold transition flex items-center gap-2">
-                                <i className="fas fa-arrow-left"></i> Back to Research
-                            </a>
-                            <div className="font-serif text-xl font-bold text-gray-800">Saad Gulzar</div>
-                        </div>
-                    </header>
+    <!-- ============================================================
+         SECTION 1: HERO
+    ============================================================ -->
+    <section id="hero">
+      <div class="hero-inner">
+        <div class="hero-badge">Working Paper</div>
 
-                    {/* Hero Section */}
-                    <div className="bg-ndblue text-white py-16 md:py-24">
-                        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                            <div className="inline-block px-4 py-1 bg-white/10 rounded-full text-ndgold font-bold tracking-wide uppercase text-sm mb-6">
-                                Working Paper
-                            </div>
-                            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-                                Digital Access to Justice
-                            </h1>
-                            <p className="text-xl md:text-2xl text-gray-200 font-serif italic mb-10">
-                                Evidence from Women's Virtual Police Stations in Pakistan
-                            </p>
-                            
-                            {/* Download Button */}
-                            <a href="files/pakistan_police.pdf" target="_blank" rel="noopener noreferrer" 
-                               className="inline-flex items-center gap-3 bg-ndgold hover:bg-yellow-500 text-white font-bold py-3 px-8 rounded transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                                <i className="fas fa-file-pdf text-xl"></i>
-                                Download Working Paper (PDF)
-                            </a>
-                        </div>
-                    </div>
+        <h1 class="hero-title">Digital Access to Justice</h1>
+        <p class="hero-subtitle">Evidence from Women's Virtual Police Stations in Pakistan</p>
 
-                    {/* Main Content Area */}
-                    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                        <div className="flex flex-col lg:flex-row gap-12">
-                            
-                            {/* Left Sidebar (Authors & Partners) */}
-                            <div className="lg:w-1/3 space-y-8">
-                                
-                                {/* Authors Card */}
-                                <div className="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
-                                    <h3 className="font-serif text-xl font-bold text-ndblue mb-4 border-b pb-2">Research Team</h3>
-                                    <ul className="space-y-4">
-                                        {authors.map((author, idx) => (
-                                            <li key={idx} className="leading-tight">
-                                                <div className="font-bold text-gray-900">{author.name}</div>
-                                                <div className="text-sm text-gray-500">{author.affiliation}</div>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
+        <div class="hero-cta">
+          <a href="#problem" class="btn btn-primary">
+            <i class="fas fa-arrow-down"></i> Read the Story
+          </a>
+          <a href="https://doi.org/10.7274/31919538" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+            <i class="fas fa-file-alt"></i> Download Paper (DOI)
+          </a>
+        </div>
 
-                                {/* Partnership Card */}
-                                <div className="bg-gray-50 p-6 border border-gray-200 rounded-lg shadow-sm border-l-4 border-l-ndgold">
-                                    <h3 className="font-serif text-xl font-bold text-ndblue mb-3">Institutional Partner</h3>
-                                    <p className="text-sm text-gray-600 mb-4">This project leverages high-frequency administrative data and field interventions in collaboration with the Punjab Police and the Safe Cities Authority.</p>
-                                    <div className="font-bold text-gray-800">Punjab Safe Cities Authority (PSCA)</div>
-                                </div>
-                            </div>
+        <p class="hero-pdf-link">
+          Also available as <a href="files/pakistan_police.pdf" target="_blank" rel="noopener noreferrer">local PDF</a>
+        </p>
 
-                            {/* Right Content Area (Interactive Tabs) */}
-                            <div className="lg:w-2/3">
-                                
-                                {/* Tab Navigation */}
-                                <div className="flex overflow-x-auto hide-scrollbar border-b border-gray-200 mb-8 pb-1">
-                                    {['overview', 'findings', 'methodology', 'media'].map((tab) => (
-                                        <button 
-                                            key={tab}
-                                            onClick={() => setActiveTab(tab)}
-                                            className={`capitalize px-6 py-3 font-bold text-sm tracking-wide transition-colors whitespace-nowrap ${
-                                                activeTab === tab 
-                                                ? 'text-ndblue border-b-2 border-ndgold' 
-                                                : 'text-gray-400 hover:text-gray-700'
-                                            }`}
-                                        >
-                                            {tab === 'media' ? 'Media & Impact' : tab.replace('-', ' ')}
-                                        </button>
-                                    ))}
-                                </div>
+        <div class="hero-authors">
+          <span class="hero-author"><span class="hero-author-name">Bakhtawar Ali</span> · Aix-Marseille</span>
+          <span class="hero-author"><span class="hero-author-name">Saad Gulzar</span> · Notre Dame</span>
+          <span class="hero-author"><span class="hero-author-name">Muhammad Yasir Khan</span> · Pittsburgh</span>
+          <span class="hero-author"><span class="hero-author-name">Muhammad Ahsan Yonus</span> · PSCA</span>
+          <span class="hero-author"><span class="hero-author-name">Amna Baig</span> · PSCA</span>
+        </div>
+      </div>
+    </section>
 
-                                {/* Tab Content */}
-                                <div className="bg-white p-8 border border-gray-100 rounded-lg shadow-sm">
-                                    
-                                    {/* OVERVIEW TAB */}
-                                    {activeTab === 'overview' && (
-                                        <div className="space-y-6 text-gray-700 leading-relaxed text-lg">
-                                            <h2 className="font-serif text-2xl font-bold text-ndblue">Abstract</h2>
-                                            <p>
-                                                This paper studies a large-scale digital reform in Pakistan that changes the entry point to justice: Women's Virtual Police Stations (WVPS). The WVPS allows women to report Gender-Based Violence (GBV) remotely through a centralized phone-based intake system and digital case management. This reduces the need for in-person visits and potentially limits local discretion at first contact.
-                                            </p>
-                                            <p>
-                                                We combine high-frequency administrative data on police calls and complaints with downstream records on case registration and escalation to examine how digital access reshapes reporting and early-stage justice delivery. 
-                                            </p>
-                                            <div className="bg-blue-50 p-4 rounded-md border border-blue-100 mt-6">
-                                                <strong className="text-ndblue block mb-2">The Core Problem:</strong>
-                                                In many low-capacity states, the criminal justice system fails long before a case reaches a courtroom. For women facing GBV, approaching the police requires traveling to a station under household monitoring, facing social stigma, and confronting discretionary gatekeeping.
-                                            </div>
-                                        </div>
-                                    )}
+    <!-- ============================================================
+         SECTION 2: THE PROBLEM — sticky scrollytelling
+    ============================================================ -->
+    <section id="problem" class="section section--alt" style="padding:0">
 
-                                    {/* KEY FINDINGS TAB */}
-                                    {activeTab === 'findings' && (
-                                        <div className="space-y-8 text-gray-700">
-                                            <h2 className="font-serif text-2xl font-bold text-ndblue mb-6">Key Results</h2>
-                                            
-                                            <div className="flex items-start gap-4">
-                                                <div className="bg-green-100 text-green-700 p-3 rounded-full"><i className="fas fa-chart-line text-xl"></i></div>
-                                                <div>
-                                                    <h4 className="font-bold text-xl text-gray-900 mb-2">1. Increased Reporting of GBV</h4>
-                                                    <p>The WVPS increases reported GBV incidents. The effects are heavily concentrated in categories where social stigma and household control are plausibly the most binding constraints for women.</p>
-                                                </div>
-                                            </div>
+      <div class="problem-header section-inner">
+        <div class="section-label">The Challenge</div>
+        <h2 class="section-title">The Path to Justice Is Blocked</h2>
+        <p class="section-intro">In low-capacity states, the criminal justice system fails long before a case reaches a courtroom. Scroll to see how the WVPS reform changes this.</p>
+      </div>
 
-                                            <div className="flex items-start gap-4">
-                                                <div className="bg-blue-100 text-blue-700 p-3 rounded-full"><i className="fas fa-exchange-alt text-xl"></i></div>
-                                                <div>
-                                                    <h4 className="font-bold text-xl text-gray-900 mb-2">2. Substitution of Reporting Pathways</h4>
-                                                    <p>The reform fundamentally changes the composition and pathway of reporting. Remote reporting (via the 15 emergency helpline) rises dramatically while walk-in reporting falls. This implies substantial substitution in how women engage the police, rather than purely mechanical increases in contact.</p>
-                                                </div>
-                                            </div>
+      <div class="problem-grid">
 
-                                            <div className="flex items-start gap-4">
-                                                <div className="bg-yellow-100 text-yellow-700 p-3 rounded-full"><i className="fas fa-file-signature text-xl"></i></div>
-                                                <div>
-                                                    <h4 className="font-bold text-xl text-gray-900 mb-2">3. The Downstream Pipeline Bottleneck</h4>
-                                                    <p>The digital intake produces measurable downstream movement along the justice pipeline, increasing formal registration (First Information Reports, or FIRs) and follow-up actions. However, this occurs with a delay, consistent with existing capacity constraints and case processing frictions at the local level.</p>
-                                                </div>
-                                            </div>
+        <!-- Sticky left column (desktop) -->
+        <div class="problem-sticky-col" aria-hidden="true">
+          <div class="sticky-panel">
 
-                                            <div className="flex items-start gap-4">
-                                                <div className="bg-purple-100 text-purple-700 p-3 rounded-full"><i className="fas fa-users text-xl"></i></div>
-                                                <div>
-                                                    <h4 className="font-bold text-xl text-gray-900 mb-2">4. Heterogeneity by Social Conservatism</h4>
-                                                    <p>In highly conservative districts, remote reporting surged but formal FIRs did not increase proportionately. The WVPS helped women overcome the barrier of initial contact, but local social norms still prevented legal escalation. In less conservative districts, the spike in remote reporting translated much more successfully into formal FIRs.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
+            <!-- Panel A content -->
+            <div class="panel-content active" id="sticky-a">
+              <div class="panel-icon"><i class="fas fa-door-closed"></i></div>
+              <div class="panel-number">01 · The Problem</div>
+              <div class="panel-title">Physical Gatekeeping</div>
+              <div class="panel-body">Every step toward justice requires a woman to leave her home, be seen, and face a system designed around in-person contact.</div>
+              <div class="panel-tags">
+                <span class="panel-tag">Household surveillance</span>
+                <span class="panel-tag">Social stigma</span>
+                <span class="panel-tag">Travel barriers</span>
+                <span class="panel-tag">Discretionary entry</span>
+              </div>
+            </div>
 
-                                    {/* METHODOLOGY TAB */}
-                                    {activeTab === 'methodology' && (
-                                        <div className="space-y-6 text-gray-700 text-lg leading-relaxed">
-                                            <h2 className="font-serif text-2xl font-bold text-ndblue mb-4">Data and Empirical Strategy</h2>
-                                            
-                                            <h4 className="font-bold text-gray-900 mt-6">Administrative Data Sources</h4>
-                                            <ul className="list-disc pl-5 space-y-2">
-                                                <li><strong>PUCAR 15:</strong> The centralized emergency response system, capturing real-time call-initiated reports.</li>
-                                                <li><strong>Complaint Management System (CMS):</strong> The digital tracking platform that logs walk-in complaints and follows case progression into First Information Reports (FIRs).</li>
-                                                <li>The data spans from 2021 through 2024, providing a comprehensive panel of police station-period observations.</li>
-                                            </ul>
+            <!-- Panel B content -->
+            <div class="panel-content" id="sticky-b">
+              <div class="panel-icon"><i class="fas fa-mobile-screen-button"></i></div>
+              <div class="panel-number">02 · The Reform</div>
+              <div class="panel-title">Women's Virtual Police Stations</div>
+              <div class="panel-body">WVPS replaces the physical intake point. Women report GBV via a centralized phone-based system — no in-person visit required.</div>
+              <div class="panel-tags">
+                <span class="panel-tag">15 Helpline</span>
+                <span class="panel-tag">Digital case mgmt</span>
+                <span class="panel-tag">Feb 2024 launch</span>
+                <span class="panel-tag">Punjab, Pakistan</span>
+              </div>
+            </div>
 
-                                            <h4 className="font-bold text-gray-900 mt-6">Research Design</h4>
-                                            <p>
-                                                We implement an event-study difference-in-differences design around the February 2024 rollout of the WVPS. The strategy exploits heterogeneous exposure to the reform across police stations, proxied by baseline reporting intensity. We compare the evolution of outcomes in "high-exposure" stations (top 30% of pre-program reporting volume by emergency calls) to "lower-exposure" stations before and after implementation.
-                                            </p>
-                                        </div>
-                                    )}
+            <!-- Panel C content -->
+            <div class="panel-content" id="sticky-c">
+              <div class="panel-icon"><i class="fas fa-magnifying-glass-chart"></i></div>
+              <div class="panel-number">03 · The Question</div>
+              <div class="panel-title">Does Digital Access Deliver Justice?</div>
+              <div class="panel-body">We use high-frequency admin data to trace the full pipeline: from first contact to FIR registration and case escalation.</div>
+              <div class="panel-tags">
+                <span class="panel-tag">↑ GBV reporting?</span>
+                <span class="panel-tag">↔ Channel shift?</span>
+                <span class="panel-tag">↑ FIR pipeline?</span>
+                <span class="panel-tag">Heterogeneous effects?</span>
+              </div>
+            </div>
 
-                                    {/* MEDIA TAB */}
-                                    {activeTab === 'media' && (
-                                        <div className="space-y-8 text-gray-700">
-                                            <h2 className="font-serif text-2xl font-bold text-ndblue mb-6">Media & Real-World Impact</h2>
-                                            
-                                            {/* Notre Dame Article */}
-                                            <a href="https://keough.nd.edu/news-and-events/news/virtual-womens-police-station-boosts-gender-based-violence-reporting-in-pakistan-notre-dame-analysis-finds/" target="_blank" className="block border border-gray-200 rounded-lg p-6 hover:shadow-md transition group">
-                                                <div className="flex items-center justify-between mb-2">
-                                                    <span className="text-xs font-bold uppercase tracking-wider text-ndgold">University News</span>
-                                                    <i className="fas fa-external-link-alt text-gray-400 group-hover:text-ndblue"></i>
-                                                </div>
-                                                <h3 className="font-serif text-xl font-bold text-gray-900 group-hover:text-ndblue transition mb-2">
-                                                    Virtual women’s police station boosts gender-based violence reporting in Pakistan, Notre Dame analysis finds
-                                                </h3>
-                                                <p className="text-gray-600 text-sm">Keough School of Global Affairs, University of Notre Dame</p>
-                                            </a>
+          </div>
+        </div>
 
-                                            {/* Government Post */}
-                                            <a href="https://www.facebook.com/100044234283819/posts/1504994047651724/?rdid=klS1qQcWWbcB1ZeT#" target="_blank" className="block border border-gray-200 rounded-lg p-6 hover:shadow-md transition group">
-                                                <div className="flex items-center justify-between mb-2">
-                                                    <span className="text-xs font-bold uppercase tracking-wider text-[#1877F2] flex items-center gap-2">
-                                                        <i className="fab fa-facebook text-lg"></i> Official Announcement
-                                                    </span>
-                                                    <i className="fas fa-external-link-alt text-gray-400 group-hover:text-blue-600"></i>
-                                                </div>
-                                                <h3 className="font-serif text-xl font-bold text-gray-900 group-hover:text-blue-600 transition mb-2">
-                                                    Chief Minister of Punjab Formal Announcement
-                                                </h3>
-                                                <p className="text-gray-600 text-sm">View the official social media release regarding the implementation and success of the Women's Virtual Police Stations.</p>
-                                            </a>
-                                            
-                                        </div>
-                                    )}
+        <!-- Scrolling right column -->
+        <div class="problem-scroll-col">
 
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
+          <!-- Trigger A -->
+          <div class="problem-trigger scroll-reveal" data-panel="a" id="trigger-a">
+            <div class="trigger-card">
+              <div class="trigger-step">Step 01 · The Gatekeeping Problem</div>
+              <h3 class="trigger-heading">Approaching the police is not free</h3>
+              <p class="trigger-text">For women facing gender-based violence in Pakistan, the path to reporting requires physical presence at a police station. This creates multiple compounding barriers:</p>
+              <ul class="trigger-list">
+                <li><i class="fas fa-eye fa-sm"></i> Leaving home is visible to household members who may be abusers or enforcers of silence</li>
+                <li><i class="fas fa-users fa-sm"></i> Police stations are predominantly male spaces — socially stigmatizing to visit for GBV matters</li>
+                <li><i class="fas fa-person-walking fa-sm"></i> Travel costs and logistics in districts with poor mobility are substantial</li>
+                <li><i class="fas fa-hand fa-sm"></i> First-contact officers exercise significant discretionary power to admit or dismiss a complaint</li>
+              </ul>
+            </div>
+          </div>
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<ProjectPage />);
-    </script>
+          <!-- Trigger B -->
+          <div class="problem-trigger scroll-reveal" data-panel="b" id="trigger-b">
+            <div class="trigger-card">
+              <div class="trigger-step">Step 02 · The Reform</div>
+              <h3 class="trigger-heading">Women's Virtual Police Stations: a digital entry point</h3>
+              <p class="trigger-text">Launched in February 2024 by the Punjab Safe Cities Authority, the WVPS fundamentally changes how women can access the justice system:</p>
+              <ul class="trigger-list">
+                <li><i class="fas fa-phone fa-sm"></i> Remote reporting via the centralized 15 emergency helpline — no physical visit required</li>
+                <li><i class="fas fa-database fa-sm"></i> Complaints logged directly into a digital case management system (CMS), bypassing local discretion</li>
+                <li><i class="fas fa-shield-halved fa-sm"></i> Privacy and distance from household surveillance at point of first contact</li>
+                <li><i class="fas fa-route fa-sm"></i> Case tracked digitally through the downstream pipeline into FIR registration</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Trigger C -->
+          <div class="problem-trigger scroll-reveal" data-panel="c" id="trigger-c">
+            <div class="trigger-card">
+              <div class="trigger-step">Step 03 · The Research Question</div>
+              <h3 class="trigger-heading">Does lowering the entry barrier change justice outcomes?</h3>
+              <p class="trigger-text">The WVPS is a large-scale natural experiment. We ask: when digital technology removes the physical gatekeeping barrier, what happens throughout the justice pipeline?</p>
+              <ul class="trigger-list">
+                <li><i class="fas fa-chart-line fa-sm"></i> Does overall GBV reporting increase — or just shift channels?</li>
+                <li><i class="fas fa-exchange-alt fa-sm"></i> Does remote reporting substitute for walk-in reporting, or is the gain additive?</li>
+                <li><i class="fas fa-file-signature fa-sm"></i> Do more reports translate into more formal FIR registrations downstream?</li>
+                <li><i class="fas fa-map fa-sm"></i> Are effects stronger in more conservative districts where stigma barriers are higher?</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         ABSTRACT INTERLUDE
+    ============================================================ -->
+    <section class="section">
+      <div class="section-inner">
+        <div class="abstract-panel scroll-reveal">
+          <h3>Abstract</h3>
+          <p>This paper studies a large-scale digital reform in Pakistan that changes the entry point to justice: Women's Virtual Police Stations (WVPS). The WVPS allows women to report Gender-Based Violence (GBV) remotely through a centralized phone-based intake system and digital case management. This reduces the need for in-person visits and potentially limits local discretion at first contact.</p>
+          <p>We combine high-frequency administrative data on police calls and complaints with downstream records on case registration and escalation to examine how digital access reshapes reporting and early-stage justice delivery.</p>
+          <div class="abstract-callout">
+            <strong>The Core Problem:</strong> In many low-capacity states, the criminal justice system fails long before a case reaches a courtroom. For women facing GBV, approaching the police requires traveling to a station under household monitoring, facing social stigma, and confronting discretionary gatekeeping.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 3: DATA & METHODOLOGY
+    ============================================================ -->
+    <section id="methodology" class="section section--alt">
+      <div class="section-inner">
+        <div class="section-label">Research Design</div>
+        <h2 class="section-title">Data &amp; Methodology</h2>
+        <p class="section-intro">We leverage administrative data spanning 2021–2024, combined with a Difference-in-Differences event-study design around the February 2024 WVPS launch.</p>
+
+        <div class="method-grid">
+
+          <div class="method-card scroll-reveal delay-1">
+            <div class="method-card-icon"><i class="fas fa-phone-volume"></i></div>
+            <h4>PUCAR 15 — Emergency Calls</h4>
+            <p>The centralized emergency response system, capturing real-time call-initiated reports. This is the primary data source for remote GBV reporting through the 15 helpline.</p>
+          </div>
+
+          <div class="method-card scroll-reveal delay-2">
+            <div class="method-card-icon"><i class="fas fa-clipboard-list"></i></div>
+            <h4>Complaint Management System (CMS)</h4>
+            <p>The digital tracking platform that logs walk-in complaints and follows case progression into First Information Reports (FIRs) and further escalation.</p>
+          </div>
+
+          <div class="method-card scroll-reveal delay-3">
+            <div class="method-card-icon"><i class="fas fa-calendar-alt"></i></div>
+            <h4>High-Frequency Panel</h4>
+            <p>Data spans 2021 through 2024, providing a comprehensive panel of police station-period observations — enabling pre- and post-WVPS comparisons.</p>
+          </div>
+
+          <div class="method-card scroll-reveal delay-4">
+            <div class="method-card-icon"><i class="fas fa-chart-bar"></i></div>
+            <h4>Event-Study DiD Design</h4>
+            <p>We exploit heterogeneous exposure across police stations. High-exposure stations (top 30% of pre-program reporting volume by emergency calls) serve as the primary treatment group, compared against lower-exposure stations before and after the February 2024 rollout.</p>
+          </div>
+
+        </div>
+
+        <div class="method-doi-note scroll-reveal">
+          For full methodology, identification assumptions, and robustness checks, see the paper: <a href="https://doi.org/10.7274/31919538" target="_blank" rel="noopener noreferrer">doi.org/10.7274/31919538 <i class="fas fa-external-link-alt fa-xs"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 4: INTERACTIVE DiD PLOTS
+    ============================================================ -->
+    <section id="charts" class="section">
+      <div class="section-inner">
+        <div class="section-label">Evidence</div>
+        <h2 class="section-title">Event-Study Results</h2>
+        <p class="section-intro">Difference-in-differences event study plots showing effects relative to the WVPS launch (t = 0). Pre-trends test the parallel trends assumption. Charts are illustrative reconstructions of paper figures.</p>
+
+        <!-- Plot 1 — Remote vs Walk-in -->
+        <div class="chart-block scroll-reveal">
+          <div class="chart-header">
+            <h3 class="chart-title">Figure 1 — GBV Reporting: Remote vs. Walk-in</h3>
+            <p class="chart-caption">DiD estimates relative to one month before WVPS launch. Shaded bands = 95% confidence intervals.</p>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="chart1"></canvas>
+          </div>
+          <div class="chart-interpretation">
+            <strong>What this means:</strong> After the WVPS launched, remote reporting via the 15 helpline surged while walk-in reporting at police stations fell. The pre-period flat trends support the parallel trends assumption underlying the DiD design. The opposing movements reveal a fundamental <em>substitution effect</em> in how women engage the justice system — not merely more reports, but different reporting channels.
+          </div>
+          <p class="chart-note">Reconstructed from paper figures. Download full paper for exact estimates: <a href="https://doi.org/10.7274/31919538" target="_blank" rel="noopener noreferrer">DOI link</a></p>
+        </div>
+
+        <!-- Plot 2 — Net Effect -->
+        <div class="chart-block scroll-reveal">
+          <div class="chart-header">
+            <h3 class="chart-title">Figure 2 — Net GBV Reporting Effect</h3>
+            <p class="chart-caption">Combined net effect on total reported GBV across all channels. Shaded band = 95% confidence interval.</p>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="chart2"></canvas>
+          </div>
+          <div class="chart-interpretation">
+            <strong>What this means:</strong> Despite the substitution effect, the WVPS produces a <em>positive net increase</em> in total GBV reporting. Remote reporting growth exceeds the decline in walk-in reporting, yielding a meaningful aggregate increase. Pre-trends are flat and indistinguishable from zero, strengthening the causal interpretation of post-treatment effects.
+          </div>
+          <p class="chart-note">Reconstructed from paper figures. Download full paper for exact estimates: <a href="https://doi.org/10.7274/31919538" target="_blank" rel="noopener noreferrer">DOI link</a></p>
+        </div>
+
+        <div class="charts-grid-2">
+
+          <!-- Plot 3 — FIR Pipeline -->
+          <div class="chart-block scroll-reveal" style="margin-bottom:0">
+            <div class="chart-header">
+              <h3 class="chart-title">Figure 3 — FIR Registration</h3>
+              <p class="chart-caption">Effect on First Information Report registrations downstream.</p>
+            </div>
+            <div class="chart-wrap" style="height:280px">
+              <canvas id="chart3"></canvas>
+            </div>
+            <div class="chart-interpretation">
+              <strong>What this means:</strong> The digital intake produces measurable downstream movement: formal FIR registration increases post-WVPS. The effect is positive but of smaller magnitude than the reporting increase, consistent with pipeline bottlenecks and existing capacity constraints at the local level.
+            </div>
+            <p class="chart-note">Illustrative reconstruction. <a href="https://doi.org/10.7274/31919538" target="_blank" rel="noopener noreferrer">Full paper ↗</a></p>
+          </div>
+
+          <!-- Plot 4 — Heterogeneity -->
+          <div class="chart-block scroll-reveal delay-2" style="margin-bottom:0">
+            <div class="chart-header">
+              <h3 class="chart-title">Figure 4 — Crime Category Heterogeneity</h3>
+              <p class="chart-caption">DiD estimates by GBV crime type. Gold bars = significant at 95%; gray = not significant.</p>
+            </div>
+            <div class="chart-wrap" style="height:280px">
+              <canvas id="chart4"></canvas>
+            </div>
+            <div class="chart-interpretation">
+              <strong>What this means:</strong> Effects are concentrated in Domestic Violence and Harassment — categories where household surveillance and social stigma are most binding. The WVPS specifically benefits women facing the highest exit barriers to in-person reporting.
+            </div>
+            <p class="chart-note">Illustrative reconstruction. <a href="https://doi.org/10.7274/31919538" target="_blank" rel="noopener noreferrer">Full paper ↗</a></p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 5: KEY FINDINGS
+    ============================================================ -->
+    <section id="findings" class="section section--alt">
+      <div class="section-inner">
+        <div class="section-label">Summary</div>
+        <h2 class="section-title">Key Findings</h2>
+        <p class="section-intro">Four main results from the difference-in-differences analysis of the WVPS rollout.</p>
+
+        <div class="findings-grid">
+
+          <div class="finding-card scroll-reveal delay-1">
+            <div class="finding-icon-wrap green">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <h4 class="finding-headline">Increased GBV Reporting</h4>
+            <p class="finding-body">The WVPS increases reported GBV incidents. Effects are heavily concentrated in categories where social stigma and household control are plausibly the most binding constraints for women attempting to reach police.</p>
+          </div>
+
+          <div class="finding-card scroll-reveal delay-2">
+            <div class="finding-icon-wrap blue">
+              <i class="fas fa-arrows-left-right"></i>
+            </div>
+            <h4 class="finding-headline">Substitution of Reporting Pathways</h4>
+            <p class="finding-body">The reform fundamentally changes the composition and pathway of reporting. Remote reporting via the 15 helpline rises dramatically while walk-in reporting falls — a substantial substitution in how women engage the police, not a purely mechanical increase.</p>
+          </div>
+
+          <div class="finding-card scroll-reveal delay-3">
+            <div class="finding-icon-wrap gold">
+              <i class="fas fa-file-signature"></i>
+            </div>
+            <h4 class="finding-headline">Downstream Pipeline Movement</h4>
+            <p class="finding-body">Digital intake produces measurable downstream movement: formal FIR registration and follow-up actions increase. This occurs with delay, consistent with existing capacity constraints and case-processing frictions at the local level.</p>
+          </div>
+
+          <div class="finding-card scroll-reveal delay-4">
+            <div class="finding-icon-wrap purple">
+              <i class="fas fa-map-location-dot"></i>
+            </div>
+            <h4 class="finding-headline">Heterogeneity by Social Conservatism</h4>
+            <p class="finding-body">In highly conservative districts, remote reporting surged but formal FIRs did not increase proportionately — the WVPS overcame the initial contact barrier but local norms still prevented legal escalation. In less conservative districts, the remote reporting spike translated more fully into formal FIRs.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 6: MEDIA & IMPACT
+    ============================================================ -->
+    <section id="media" class="section">
+      <div class="section-inner">
+        <div class="section-label">Coverage &amp; Impact</div>
+        <h2 class="section-title">Media &amp; Real-World Impact</h2>
+        <p class="section-intro">The WVPS research has drawn institutional attention from academia, government, and press.</p>
+
+        <div class="media-grid">
+
+          <a href="https://keough.nd.edu/news-and-events/news/virtual-womens-police-station-boosts-gender-based-violence-reporting-in-pakistan-notre-dame-analysis-finds/"
+             target="_blank" rel="noopener noreferrer"
+             class="media-card scroll-reveal delay-1">
+            <div class="media-badge"><i class="fas fa-university"></i> Notre Dame Keough School</div>
+            <div class="media-headline">Virtual Women's Police Station Boosts Gender-Based Violence Reporting in Pakistan, Notre Dame Analysis Finds</div>
+            <div class="media-outlet">Keough School of Global Affairs, University of Notre Dame</div>
+            <div class="media-card-footer">
+              Read article <i class="fas fa-external-link-alt fa-xs"></i>
+            </div>
+          </a>
+
+          <a href="https://www.facebook.com/100044234283819/posts/1504994047651724/?rdid=klS1qQcWWbcB1ZeT#"
+             target="_blank" rel="noopener noreferrer"
+             class="media-card scroll-reveal delay-2">
+            <div class="media-badge fb"><i class="fab fa-facebook"></i> Official Announcement</div>
+            <div class="media-headline">Chief Minister of Punjab — Formal Announcement on WVPS Implementation</div>
+            <div class="media-outlet">Punjab Safe Cities Authority — Official Social Media Release</div>
+            <div class="media-card-footer">
+              View official post <i class="fas fa-external-link-alt fa-xs"></i>
+            </div>
+          </a>
+
+          <a href="https://doi.org/10.7274/31919538"
+             target="_blank" rel="noopener noreferrer"
+             class="media-card media-doi-card scroll-reveal delay-3">
+            <div class="media-badge"><i class="fas fa-file-alt"></i> Working Paper</div>
+            <div class="media-headline">Access the Full Working Paper &amp; Replication Data</div>
+            <div class="media-outlet">DOI: 10.7274/31919538 — full estimates, robustness checks, and replication code</div>
+            <div class="media-card-footer">
+              <i class="fas fa-download"></i> doi.org/10.7274/31919538 <i class="fas fa-external-link-alt fa-xs"></i>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 7: RESEARCH TEAM & PARTNERS
+    ============================================================ -->
+    <section id="team" class="section section--alt">
+      <div class="section-inner">
+        <div class="section-label">Research Team</div>
+        <h2 class="section-title">Authors &amp; Partners</h2>
+        <p class="section-intro">This project is a collaboration between academic researchers and the Punjab Safe Cities Authority.</p>
+
+        <div class="team-grid">
+
+          <div class="author-card scroll-reveal delay-1">
+            <div class="author-avatar">BA</div>
+            <div class="author-name">Bakhtawar Ali</div>
+            <div class="author-affil">Aix-Marseille School of Economics</div>
+          </div>
+
+          <div class="author-card scroll-reveal delay-2">
+            <div class="author-avatar">SG</div>
+            <div class="author-name">Saad Gulzar</div>
+            <div class="author-affil">University of Notre Dame</div>
+          </div>
+
+          <div class="author-card scroll-reveal delay-3">
+            <div class="author-avatar">MK</div>
+            <div class="author-name">Muhammad Yasir Khan</div>
+            <div class="author-affil">University of Pittsburgh</div>
+          </div>
+
+          <div class="author-card scroll-reveal delay-4">
+            <div class="author-avatar">AY</div>
+            <div class="author-name">Muhammad Ahsan Yonus</div>
+            <div class="author-affil">Punjab Safe Cities Authority</div>
+          </div>
+
+          <div class="author-card scroll-reveal delay-4">
+            <div class="author-avatar">AB</div>
+            <div class="author-name">Amna Baig</div>
+            <div class="author-affil">Punjab Safe Cities Authority</div>
+          </div>
+
+        </div>
+
+        <div class="partner-card scroll-reveal">
+          <div class="partner-icon"><i class="fas fa-shield-halved"></i></div>
+          <div>
+            <h4>Institutional Partner — Punjab Safe Cities Authority (PSCA)</h4>
+            <p>This project leverages high-frequency administrative data and field interventions in direct collaboration with the Punjab Police and the Safe Cities Authority. PSCA provided administrative access to PUCAR 15 and CMS data systems, and co-authors from PSCA contributed institutional knowledge of the WVPS rollout process.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-back">
+          <a href="index.html"><i class="fas fa-arrow-left"></i> Back to All Research</a>
+        </div>
+        <div class="footer-citation">
+          <strong>Cite as:</strong> Ali, B., Gulzar, S., Khan, M.Y., Yonus, M.A., &amp; Baig, A. <em>Digital Access to Justice: Evidence from Women's Virtual Police Stations in Pakistan.</em> DOI: <a href="https://doi.org/10.7274/31919538" target="_blank" rel="noopener noreferrer">10.7274/31919538</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2024 Saad Gulzar. All rights reserved.</span>
+        <span>In collaboration with the Punjab Safe Cities Authority</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+  (function () {
+    'use strict';
+
+    /* -------------------------------------------------------
+       REDUCED MOTION CHECK
+    ------------------------------------------------------- */
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* -------------------------------------------------------
+       READING PROGRESS BAR
+    ------------------------------------------------------- */
+    const progressBar = document.getElementById('progress-bar');
+
+    function updateProgress() {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = pct.toFixed(1) + '%';
+      progressBar.setAttribute('aria-valuenow', Math.round(pct));
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    /* -------------------------------------------------------
+       THEME TOGGLE
+    ------------------------------------------------------- */
+    const html = document.documentElement;
+    const toggleBtn = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+
+    const savedTheme = localStorage.getItem('sg-theme') || 'light';
+    html.setAttribute('data-theme', savedTheme);
+    themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+
+    toggleBtn.addEventListener('click', () => {
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('sg-theme', next);
+      themeIcon.className = next === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+      updateAllChartThemes();
+    });
+
+    /* -------------------------------------------------------
+       HERO SCROLL BUTTON
+    ------------------------------------------------------- */
+    const heroScrollBtn = document.querySelector('a[href="#problem"]');
+    if (heroScrollBtn) {
+      heroScrollBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.getElementById('problem');
+        if (target) target.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth' });
+      });
+    }
+
+    /* -------------------------------------------------------
+       SCROLL REVEAL — IntersectionObserver
+    ------------------------------------------------------- */
+    if (!reducedMotion) {
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.scroll-reveal').forEach(el => revealObserver.observe(el));
+    } else {
+      document.querySelectorAll('.scroll-reveal').forEach(el => el.classList.add('revealed'));
+    }
+
+    /* -------------------------------------------------------
+       STICKY PANEL — update left panel on scroll
+    ------------------------------------------------------- */
+    const triggers = document.querySelectorAll('.problem-trigger[data-panel]');
+    const stickyPanels = {
+      a: document.getElementById('sticky-a'),
+      b: document.getElementById('sticky-b'),
+      c: document.getElementById('sticky-c'),
+    };
+
+    let currentPanel = 'a';
+
+    function setActivePanel(id) {
+      if (id === currentPanel) return;
+      const prev = stickyPanels[currentPanel];
+      const next = stickyPanels[id];
+      if (!next) return;
+
+      if (prev) {
+        prev.classList.remove('active');
+        prev.style.position = 'absolute';
+      }
+      next.style.position = 'relative';
+      next.classList.add('active');
+      currentPanel = id;
+    }
+
+    if (!reducedMotion) {
+      const stickyObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setActivePanel(entry.target.dataset.panel);
+          }
+        });
+      }, {
+        threshold: 0,
+        rootMargin: '-45% 0px -45% 0px'
+      });
+
+      triggers.forEach(t => stickyObserver.observe(t));
+    }
+
+    /* -------------------------------------------------------
+       CHART.JS SETUP
+    ------------------------------------------------------- */
+
+    // Global plugin: vertical dashed line at x = 0
+    const verticalZeroLine = {
+      id: 'verticalZeroLine',
+      afterDraw(chart) {
+        if (!chart.options.plugins?.verticalZeroLine?.enabled) return;
+        const { ctx, chartArea } = chart;
+        const xScale = chart.scales.x;
+        if (!xScale) return;
+        const xPos = xScale.getPixelForValue(0);
+        if (xPos < chartArea.left || xPos > chartArea.right) return;
+
+        const isDark = html.getAttribute('data-theme') === 'dark';
+        ctx.save();
+        ctx.beginPath();
+        ctx.setLineDash([5, 4]);
+        ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.28)';
+        ctx.lineWidth = 1.5;
+        ctx.moveTo(xPos, chartArea.top);
+        ctx.lineTo(xPos, chartArea.bottom);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Label "WVPS Launch" above the line
+        ctx.fillStyle = isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.4)';
+        ctx.font = '10px Lato, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('WVPS Launch', xPos, chartArea.top - 4);
+        ctx.restore();
+      }
+    };
+
+    // Global plugin: horizontal error bars for bar chart
+    const horizontalErrorBars = {
+      id: 'horizontalErrorBars',
+      afterDatasetsDraw(chart) {
+        if (!chart.data.errorBars) return;
+        const { ctx, scales } = chart;
+        const xScale = scales.x;
+        const meta = chart.getDatasetMeta(0);
+        const isDark = html.getAttribute('data-theme') === 'dark';
+        const errorBars = chart.data.errorBars;
+
+        ctx.save();
+        ctx.lineWidth = 2;
+        const CAP = 5;
+
+        meta.data.forEach((bar, i) => {
+          if (!errorBars[i]) return;
+          const { low, high } = errorBars[i];
+          const y = bar.y;
+          const xLow  = xScale.getPixelForValue(low);
+          const xHigh = xScale.getPixelForValue(high);
+          const isSignif = low > 0;
+
+          ctx.strokeStyle = isSignif
+            ? (isDark ? '#e6b800' : '#9a7400')
+            : (isDark ? '#6b7280' : '#9ca3af');
+
+          // Horizontal line
+          ctx.beginPath();
+          ctx.moveTo(xLow, y);
+          ctx.lineTo(xHigh, y);
+          ctx.stroke();
+
+          // Left cap
+          ctx.beginPath();
+          ctx.moveTo(xLow, y - CAP);
+          ctx.lineTo(xLow, y + CAP);
+          ctx.stroke();
+
+          // Right cap
+          ctx.beginPath();
+          ctx.moveTo(xHigh, y - CAP);
+          ctx.lineTo(xHigh, y + CAP);
+          ctx.stroke();
+        });
+
+        ctx.restore();
+      }
+    };
+
+    Chart.register(verticalZeroLine, horizontalErrorBars);
+
+    // Color helpers
+    function chartColors() {
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      return {
+        text:     isDark ? '#e6edf3' : '#374151',
+        muted:    isDark ? '#8b949e' : '#6b7280',
+        grid:     isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)',
+        tooltipBg: isDark ? '#1c2128' : '#ffffff',
+        tooltipBorder: isDark ? '#30363d' : '#e5e7eb',
+        gold:     '#c99700',
+        goldCi:   'rgba(201, 151, 0, 0.15)',
+        blue:     isDark ? '#4f9eed' : '#002b5c',
+        blueCi:   isDark ? 'rgba(79,158,237,0.12)' : 'rgba(0,43,92,0.10)',
+        teal:     '#0d9488',
+        tealCi:   'rgba(13,148,136,0.12)',
+      };
+    }
+
+    function baseScaleOptions(title, label) {
+      const c = chartColors();
+      return {
+        grid:   { color: c.grid, drawBorder: false },
+        ticks:  { color: c.text, font: { family: 'Lato, sans-serif', size: 11 } },
+        title:  { display: !!label, text: label || '', color: c.muted, font: { family: 'Lato, sans-serif', size: 11 } },
+        border: { display: false },
+      };
+    }
+
+    function basePlugins() {
+      const c = chartColors();
+      return {
+        legend: {
+          labels: {
+            color: c.text,
+            font: { family: 'Lato, sans-serif', size: 12 },
+            boxWidth: 14,
+            boxHeight: 14,
+            filter: (item) => !item.text.includes('CI '),
+          }
+        },
+        tooltip: {
+          backgroundColor: c.tooltipBg,
+          titleColor: c.text,
+          bodyColor: c.muted,
+          borderColor: c.tooltipBorder,
+          borderWidth: 1,
+          padding: 10,
+          filter: (item) => !item.dataset.label.includes('CI '),
+          callbacks: {
+            label: (ctx) => ` ${ctx.dataset.label}: ${ctx.parsed.y}`,
+          }
+        },
+        verticalZeroLine: { enabled: true },
+      };
+    }
+
+    // Data
+    const months = [-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11,12];
+
+    const remoteEst   = [-3,2,-4,5,-2,3,-1,-5,4,2,-3,0,15,32,48,62,70,78,82,85,88,87,90,88,92];
+    const remoteHigh  = [10,15,10,18,12,16,12,8,17,15,10,12,28,50,65,80,88,96,100,103,106,105,108,106,110];
+    const remoteLow   = [-16,-11,-18,-8,-16,-10,-14,-18,-9,-11,-16,-12,2,14,31,44,52,60,64,67,70,69,72,70,74];
+
+    const walkinEst   = [4,-2,3,-5,2,-4,3,1,-3,-2,4,0,-8,-18,-28,-35,-38,-42,-44,-46,-45,-47,-46,-48,-49];
+    const walkinHigh  = [18,12,17,8,16,10,17,15,11,12,18,14,4,-4,-12,-18,-21,-25,-27,-29,-28,-30,-29,-31,-32];
+    const walkinLow   = [-10,-16,-11,-18,-12,-18,-11,-13,-17,-16,-10,-14,-20,-32,-44,-52,-55,-59,-61,-63,-62,-64,-63,-65,-66];
+
+    const netEst      = [1,0,-1,0,0,-1,2,-4,1,0,1,0,7,14,20,27,32,36,38,39,43,40,44,40,43];
+    const netHigh     = [14,12,11,12,12,11,14,8,13,12,13,12,20,28,35,44,50,55,58,60,65,62,67,62,66];
+    const netLow      = [-12,-12,-13,-12,-12,-13,-10,-16,-11,-12,-11,-12,-6,0,5,10,14,17,18,18,21,18,21,18,20];
+
+    const firEst      = [-1,1,0,2,-1,1,-2,0,1,-1,0,0,3,6,9,12,14,16,18,17,19,18,20,18,21];
+    const firHigh     = [8,10,8,11,8,10,7,8,9,8,8,8,12,18,22,26,28,30,32,31,33,32,35,32,36];
+    const firLow      = [-10,-8,-8,-7,-10,-8,-11,-8,-7,-10,-8,-8,-6,-6,-4,-2,0,2,4,3,5,4,5,4,6];
+
+    const xy = (yArr) => months.map((x, i) => ({ x, y: yArr[i] }));
+
+    function makeEventStudyXScale(label) {
+      const c = chartColors();
+      return {
+        type: 'linear',
+        min: -12, max: 12,
+        grid: { color: c.grid, drawBorder: false },
+        ticks: {
+          color: c.text,
+          font: { family: 'Lato, sans-serif', size: 11 },
+          stepSize: 3,
+          callback: (v) => v === 0 ? 't=0' : v,
+        },
+        title: {
+          display: true,
+          text: 'Months relative to WVPS launch',
+          color: c.muted,
+          font: { family: 'Lato, sans-serif', size: 11 },
+        },
+        border: { display: false },
+      };
+    }
+
+    function makeYScale(label) {
+      const c = chartColors();
+      return {
+        grid: { color: c.grid, drawBorder: false },
+        ticks: { color: c.text, font: { family: 'Lato, sans-serif', size: 11 } },
+        title: { display: true, text: label, color: c.muted, font: { family: 'Lato, sans-serif', size: 11 } },
+        border: { display: false },
+      };
+    }
+
+    // Track all charts for theme updates
+    const allCharts = [];
+
+    /* ------ CHART 1: Remote vs Walk-in ------ */
+    (function () {
+      const ctx = document.getElementById('chart1').getContext('2d');
+      const c = chartColors();
+
+      const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          datasets: [
+            // Remote CI band
+            {
+              label: 'CI Upper (remote)',
+              data: xy(remoteHigh),
+              borderColor: 'transparent',
+              backgroundColor: c.goldCi,
+              pointRadius: 0,
+              fill: '+1',
+              tension: 0.35,
+              order: 3,
+            },
+            {
+              label: 'CI Lower (remote)',
+              data: xy(remoteLow),
+              borderColor: 'transparent',
+              backgroundColor: 'transparent',
+              pointRadius: 0,
+              fill: false,
+              tension: 0.35,
+              order: 3,
+            },
+            // Walk-in CI band
+            {
+              label: 'CI Upper (walk-in)',
+              data: xy(walkinHigh),
+              borderColor: 'transparent',
+              backgroundColor: c.blueCi,
+              pointRadius: 0,
+              fill: '+1',
+              tension: 0.35,
+              order: 3,
+            },
+            {
+              label: 'CI Lower (walk-in)',
+              data: xy(walkinLow),
+              borderColor: 'transparent',
+              backgroundColor: 'transparent',
+              pointRadius: 0,
+              fill: false,
+              tension: 0.35,
+              order: 3,
+            },
+            // Main lines
+            {
+              label: 'Remote Reporting (15 Helpline)',
+              data: xy(remoteEst),
+              borderColor: c.gold,
+              backgroundColor: 'transparent',
+              borderWidth: 2.5,
+              pointRadius: 2.5,
+              pointHoverRadius: 5,
+              fill: false,
+              tension: 0.35,
+              order: 1,
+            },
+            {
+              label: 'Walk-in Reporting',
+              data: xy(walkinEst),
+              borderColor: c.blue,
+              backgroundColor: 'transparent',
+              borderWidth: 2.5,
+              pointRadius: 2.5,
+              pointHoverRadius: 5,
+              fill: false,
+              tension: 0.35,
+              order: 1,
+            },
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            ...basePlugins(),
+            legend: {
+              ...basePlugins().legend,
+              labels: {
+                ...basePlugins().legend.labels,
+                filter: (item) => !item.text.startsWith('CI '),
+              }
+            }
+          },
+          scales: {
+            x: makeEventStudyXScale(),
+            y: makeYScale('DiD Estimate (complaints)'),
+          },
+        }
+      });
+
+      allCharts.push({ chart, type: 'event1' });
+    })();
+
+    /* ------ CHART 2: Net Effect ------ */
+    (function () {
+      const ctx = document.getElementById('chart2').getContext('2d');
+      const c = chartColors();
+
+      const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          datasets: [
+            {
+              label: 'CI Upper (net)',
+              data: xy(netHigh),
+              borderColor: 'transparent',
+              backgroundColor: c.blueCi,
+              pointRadius: 0,
+              fill: '+1',
+              tension: 0.35,
+              order: 2,
+            },
+            {
+              label: 'CI Lower (net)',
+              data: xy(netLow),
+              borderColor: 'transparent',
+              backgroundColor: 'transparent',
+              pointRadius: 0,
+              fill: false,
+              tension: 0.35,
+              order: 2,
+            },
+            {
+              label: 'Net GBV Reporting Effect',
+              data: xy(netEst),
+              borderColor: c.blue,
+              backgroundColor: 'transparent',
+              borderWidth: 2.5,
+              pointRadius: 2.5,
+              pointHoverRadius: 5,
+              fill: false,
+              tension: 0.35,
+              order: 1,
+            },
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            ...basePlugins(),
+            legend: {
+              ...basePlugins().legend,
+              labels: {
+                ...basePlugins().legend.labels,
+                filter: (item) => !item.text.startsWith('CI '),
+              }
+            }
+          },
+          scales: {
+            x: makeEventStudyXScale(),
+            y: makeYScale('Net DiD Estimate (complaints)'),
+          },
+        }
+      });
+
+      allCharts.push({ chart, type: 'event2' });
+    })();
+
+    /* ------ CHART 3: FIR Registration ------ */
+    (function () {
+      const ctx = document.getElementById('chart3').getContext('2d');
+      const c = chartColors();
+
+      const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          datasets: [
+            {
+              label: 'CI Upper (FIR)',
+              data: xy(firHigh),
+              borderColor: 'transparent',
+              backgroundColor: c.tealCi,
+              pointRadius: 0,
+              fill: '+1',
+              tension: 0.35,
+              order: 2,
+            },
+            {
+              label: 'CI Lower (FIR)',
+              data: xy(firLow),
+              borderColor: 'transparent',
+              backgroundColor: 'transparent',
+              pointRadius: 0,
+              fill: false,
+              tension: 0.35,
+              order: 2,
+            },
+            {
+              label: 'FIR Registrations',
+              data: xy(firEst),
+              borderColor: c.teal,
+              backgroundColor: 'transparent',
+              borderWidth: 2.5,
+              pointRadius: 2.5,
+              pointHoverRadius: 5,
+              fill: false,
+              tension: 0.35,
+              order: 1,
+            },
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            ...basePlugins(),
+            legend: {
+              ...basePlugins().legend,
+              labels: {
+                ...basePlugins().legend.labels,
+                filter: (item) => !item.text.startsWith('CI '),
+              }
+            }
+          },
+          scales: {
+            x: makeEventStudyXScale(),
+            y: makeYScale('DiD Estimate (FIRs)'),
+          },
+        }
+      });
+
+      allCharts.push({ chart, type: 'event3' });
+    })();
+
+    /* ------ CHART 4: Heterogeneity (horizontal bar) ------ */
+    (function () {
+      const ctx = document.getElementById('chart4').getContext('2d');
+      const c = chartColors();
+
+      const categories  = ['Other GBV','Kidnapping','Assault','Threats','Harassment','Domestic Violence'];
+      const estimates   = [1.2, 2.4, 1.8, 3.1, 7.4, 9.2];
+      const errorBarsData = [
+        { low: -0.9, high: 3.3 },
+        { low: -0.8, high: 5.6 },
+        { low: -0.5, high: 4.1 },
+        { low:  0.8, high: 5.4 },
+        { low:  5.2, high: 9.6 },
+        { low:  7.1, high: 11.3 },
+      ];
+
+      const isSignif = errorBarsData.map(e => e.low > 0);
+      const barColors = isSignif.map(s => s
+        ? (c.gold + 'CC')
+        : (html.getAttribute('data-theme') === 'dark' ? 'rgba(107,114,128,0.45)' : 'rgba(156,163,175,0.5)')
+      );
+
+      const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: categories,
+          datasets: [{
+            label: 'DiD Estimate',
+            data: estimates,
+            backgroundColor: barColors,
+            borderColor: isSignif.map(s => s ? c.gold : (html.getAttribute('data-theme') === 'dark' ? '#6b7280' : '#9ca3af')),
+            borderWidth: 1.5,
+            borderRadius: 3,
+          }],
+          errorBars: errorBarsData,
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            ...basePlugins(),
+            verticalZeroLine: { enabled: true },
+            legend: { display: false },
+            tooltip: {
+              ...basePlugins().tooltip,
+              callbacks: {
+                label: (ctx) => {
+                  const i = ctx.dataIndex;
+                  const eb = errorBarsData[i];
+                  return [
+                    ` Estimate: ${ctx.parsed.x.toFixed(1)}`,
+                    ` 95% CI: [${eb.low.toFixed(1)}, ${eb.high.toFixed(1)}]`,
+                    ` ${isSignif[i] ? '✓ Significant' : '– Not significant'}`,
+                  ];
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              type: 'linear',
+              min: -3, max: 14,
+              grid: { color: c.grid, drawBorder: false },
+              ticks: { color: c.text, font: { family: 'Lato, sans-serif', size: 10 } },
+              title: { display: true, text: 'DiD Estimate', color: c.muted, font: { family: 'Lato, sans-serif', size: 11 } },
+              border: { display: false },
+            },
+            y: {
+              grid: { display: false },
+              ticks: { color: c.text, font: { family: 'Lato, sans-serif', size: 11 } },
+              border: { display: false },
+            }
+          }
+        }
+      });
+
+      allCharts.push({ chart, type: 'hetero' });
+    })();
+
+    /* -------------------------------------------------------
+       THEME-AWARE CHART UPDATES
+    ------------------------------------------------------- */
+    function updateAllChartThemes() {
+      const c = chartColors();
+
+      allCharts.forEach(({ chart, type }) => {
+        const isDark = html.getAttribute('data-theme') === 'dark';
+        const { options, data } = chart;
+
+        // Update scales
+        ['x','y'].forEach(axis => {
+          if (!options.scales[axis]) return;
+          const sc = options.scales[axis];
+          if (sc.ticks) sc.ticks.color = c.text;
+          if (sc.grid)  sc.grid.color  = c.grid;
+          if (sc.title) sc.title.color = c.muted;
+        });
+
+        // Update plugins
+        if (options.plugins.legend?.labels)
+          options.plugins.legend.labels.color = c.text;
+        if (options.plugins.tooltip) {
+          options.plugins.tooltip.backgroundColor = c.tooltipBg;
+          options.plugins.tooltip.titleColor = c.text;
+          options.plugins.tooltip.bodyColor   = c.muted;
+          options.plugins.tooltip.borderColor = c.tooltipBorder;
+        }
+
+        // Update dataset colors
+        if (type === 'event1') {
+          data.datasets[0].backgroundColor = c.goldCi;
+          data.datasets[2].backgroundColor = c.blueCi;
+          data.datasets[4].borderColor = c.gold;
+          data.datasets[5].borderColor = c.blue;
+        } else if (type === 'event2') {
+          data.datasets[0].backgroundColor = c.blueCi;
+          data.datasets[2].borderColor = c.blue;
+        } else if (type === 'event3') {
+          data.datasets[0].backgroundColor = c.tealCi;
+          data.datasets[2].borderColor = c.teal;
+        } else if (type === 'hetero') {
+          const errorBarsData = data.errorBars;
+          const isSignif = errorBarsData.map(e => e.low > 0);
+          data.datasets[0].backgroundColor = isSignif.map(s => s
+            ? c.gold + 'CC'
+            : (isDark ? 'rgba(107,114,128,0.45)' : 'rgba(156,163,175,0.5)')
+          );
+          data.datasets[0].borderColor = isSignif.map(s => s
+            ? c.gold
+            : (isDark ? '#6b7280' : '#9ca3af')
+          );
+        }
+
+        chart.update('none');
+      });
+    }
+
+  })();
+  </script>
 </body>
 </html>
