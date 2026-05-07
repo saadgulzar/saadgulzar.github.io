@@ -169,7 +169,14 @@
         .filter-btn.active { background: var(--nd-blue); color: #fff; border-color: var(--nd-blue); }
 
         /* === POLICY LIST (Compact) === */
-        .policy-item { display: flex; align-items: flex-start; margin-bottom: 25px; }
+        .policy-item { 
+            display: flex; 
+            align-items: flex-start; 
+            margin-bottom: 25px; 
+            -webkit-column-break-inside: avoid; /* Chrome, Safari */
+            page-break-inside: avoid;           /* Legacy */
+            break-inside: avoid;                /* Standard */
+        }
         .policy-logo { width: 60px; margin-right: 20px; mix-blend-mode: multiply; }
         .policy-type { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--nd-gold); font-weight: 700; display: block; }
 
