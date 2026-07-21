@@ -1203,28 +1203,6 @@ footer .todo{color:var(--bad);font-size:11.5px}
   </div>
 </noscript>
 
-<!-- the scale of the work, before anything else.
-     PI, 2026-07-15: "corpus figures should be on the very top." They stay.
-     The reviewer's objection was not the position but that they arrive "unreadable
-     cold"; four big numbers with no frame, before the reader knows what the page
-     is. Its own remedy offered a choice: "Move below the hero, caption them, or
-     both." So they are captioned and keep their place. -->
-<div class="corpus">
-  <p class="corpus-head">What was read to build this page</p>
-  <div><b data-count="854">854</b>
-    <span>constituencies</span><em>every one digitized · 5 more
-    exist on the ECP roster with no surviving form</em></div>
-  <div><b data-count="179202">179,202</b>
-    <span>polling stations</span><em>one row each</em></div>
-  <div><b data-count="9390">9,390</b>
-    <span>pages read</span><em>858 scanned Form 48s</em></div>
-  <div><b data-count="48.5">48.5</b>
-    <span>% of votes set aside</span><em>cast at combined-gender stations, where the
-    ballot does not record the voter's gender</em></div>
-</div>
-
-
-
 <section id="map">
   <div class="wrap">
     <div class="sechead">
@@ -1265,8 +1243,11 @@ footer .todo{color:var(--bad);font-size:11.5px}
         equally, which lets the colour show the gender gap alone, independent of how heavy voting was.</p>
       <p><b>What it is measured from.</b> Only the women-only and men-only polling stations, because they
         are the only places the vote is recorded by gender; combined stations, which do not record it,
-        are set aside. Nothing is modelled or estimated: every coloured cell is a measured figure, and
-        the identical formula is applied to 2018 and to 2024, so the two maps are directly comparable.</p>
+        are set aside. Every constituency figure is built from the bottom up, from the polling stations
+        themselves: the votes are summed across the individual stations in that seat, and the seat's
+        figure is formed from those sums; no constituency-level published total is used. Nothing is
+        modelled or estimated: every coloured cell is a measured figure, and the identical formula is
+        applied to 2018 and to 2024, so the two maps are directly comparable.</p>
       <p><b>What it tells you, and what it does not.</b> It tells you whether women took part at the same
         level as men in that seat, in that election. It does not tell you how many women voted, or whether
         voting was heavy or light: a deep-coloured seat can have high overall turnout, and a pale seat
@@ -1383,7 +1364,7 @@ footer .todo{color:var(--bad);font-size:11.5px}
     <div class="sechead">
       <p class="eyebrow">Women's participation · 2018 to 2024</p>
       <h2>The change in women's participation, 2018 to 2024</h2>
-      <p class="lede">This map shows how women's participation in voting changed between the 2018 and
+      <p class="lede">This map shows how women's participation in voting relative to men's changed between the 2018 and
         2024 general elections, for every National and Provincial Assembly constituency, drawn on the
         2024 boundaries with National and Provincial side by side. <b>Teal</b> marks seats where women's
         participation rose relative to men's; <b>orange</b> where it fell; <b>grey</b> where a comparison
@@ -1450,7 +1431,10 @@ footer .todo{color:var(--bad);font-size:11.5px}
           participation, the same measure as the two maps above: the votes at women-only stations against
           registered women, the same for men, then women's figure as a share of the two,
           <b>(V<sub>f</sub>/R<sub>f</sub>) &divide; (V<sub>f</sub>/R<sub>f</sub> + V<sub>m</sub>/R<sub>m</sub>)</b>,
-          a number from 0 to 1 where 0.5 is parity.</p>
+          a number from 0 to 1 where 0.5 is parity. Each year's constituency figure is built from the
+          bottom up, from the polling stations themselves: the votes are summed across the individual
+          stations in that seat and the seat's figure formed from those sums; no constituency-level
+          published total is used.</p>
         <p><b>What the colour is: the change.</b> The colour here is not that share, but the change in it
           between the elections: <b>the 2024 share minus the 2018 share</b>. This is a signed number.
           Where it is negative, women's participation fell relative to men's between the two elections;
@@ -1563,6 +1547,23 @@ footer .todo{color:var(--bad);font-size:11.5px}
       <p class="lede">Every figure on this page is drawn from the polling-station returns
         themselves. Here is how 9,390 pages of scanned paper became a dataset, how
         turnout by gender was estimated from it, and how far the estimate can be pushed.</p>
+    </div>
+
+    <!-- the scale of the work. It sat at the very top until 2026-07-21, when the PI
+         moved it here: the maps should be the first thing the reader meets, and the
+         four counters read better beside the method that produced them. -->
+    <div class="corpus">
+      <p class="corpus-head">What was read to build this page</p>
+      <div><b data-count="854">854</b>
+        <span>constituencies</span><em>every one digitized · 5 more
+        exist on the ECP roster with no surviving form</em></div>
+      <div><b data-count="179202">179,202</b>
+        <span>polling stations</span><em>one row each</em></div>
+      <div><b data-count="9390">9,390</b>
+        <span>pages read</span><em>858 scanned Form 48s</em></div>
+      <div><b data-count="48.5">48.5</b>
+        <span>% of votes set aside</span><em>cast at combined-gender stations, where the
+        ballot does not record the voter's gender</em></div>
     </div>
 
     <!-- The trust strip (`.assure`) was removed entirely 2026-07-17, by the PI:
