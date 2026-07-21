@@ -109,6 +109,44 @@
         .nav-link { color: #555; font-weight: 700; text-transform: uppercase; font-size: 13px; letter-spacing: 1px; padding: 12px 20px !important; }
         .nav-link:hover, .nav-link.active { color: var(--nd-blue); background: #f9f9f9; }
 
+        /* === FEATURED BANNER (ANNOUNCEMENT) === */
+        .featured-banner {
+            background: #fff;
+            border: 1px solid #e6e6e6;
+            border-left: 4px solid var(--nd-gold);
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            padding: 22px 26px;
+            margin: 35px 0 5px 0;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .featured-body { flex: 1 1 480px; }
+        .featured-tag {
+            display: inline-block;
+            font-size: 10px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1.5px;
+            color: #fff; background-color: var(--nd-gold);
+            padding: 3px 8px; border-radius: 2px; margin-bottom: 10px;
+        }
+        .featured-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 21px; font-weight: 700; line-height: 1.3;
+            color: var(--nd-blue); display: block; margin-bottom: 8px;
+        }
+        a.featured-title:hover { color: var(--nd-gold); }
+        .featured-desc { font-size: 14px; color: #555; line-height: 1.6; margin: 0; }
+        .featured-cta {
+            flex: 0 0 auto;
+            background: var(--nd-blue); color: #fff;
+            font-size: 12px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px;
+            padding: 11px 20px; border-radius: 3px; white-space: nowrap;
+        }
+        .featured-cta:hover { background: var(--nd-gold); color: #fff; }
+
         /* === SECTION STYLING === */
         section { padding: 50px 0; border-bottom: 1px solid #eee; }
         .section-header { 
@@ -239,6 +277,7 @@
             <ul class="nav justify-content-center">
                 <li><a class="nav-link" href="#research">Research</a></li>
                 <li><a class="nav-link" href="#policy">Policy Work</a></li>
+                <li><a class="nav-link" href="pkge2024/">Dashboards</a></li>
                 <li><a class="nav-link" href="#teaching">Teaching</a></li>
                 <li><a class="nav-link" href="#advising">Advising</a></li>
             </ul>
@@ -246,7 +285,17 @@
     </nav>
 
     <div class="container">
-   
+
+        <div class="featured-banner">
+            <div class="featured-body">
+                <span class="featured-tag">New &middot; Dashboard</span>
+                <a href="pkge2024/" class="featured-title">Women&rsquo;s Turnout in Pakistan, 2018 and 2024</a>
+                <p class="featured-desc">
+                    An interactive map of how women&rsquo;s participation in voting compared with men&rsquo;s across all 854 National Assembly constituencies, built from 179,202 polling-station records digitized from Election Commission Form 48s. With <a href="https://sites.google.com/view/yasirkhan" target="_blank">Muhammad Yasir Khan</a> and <a href="https://mamooralikhan.com" target="_blank">Mamoor Ali Khan</a>.
+                </p>
+            </div>
+            <a href="pkge2024/" class="featured-cta">Explore the dashboard &rarr;</a>
+        </div>
 
 
 <section id="research">
