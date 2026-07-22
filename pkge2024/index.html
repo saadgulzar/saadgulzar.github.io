@@ -1135,6 +1135,12 @@ footer .todo{color:var(--bad);font-size:11.5px}
 .chg-legend .cl-cell:last-child i{border-radius:0 5px 5px 0}
 .chg-legend .cl-cell em{font-family:var(--mono);font-size:9px;letter-spacing:.03em;
   text-transform:uppercase;color:var(--ink-3);font-style:normal;text-align:center;line-height:1.15}
+/* each band's numeric range, printed under its label on all three map legends.
+   Computed in JS from the band thresholds, so it can never disagree with the
+   colours. Smaller and quieter than the label, and never uppercased. 2026-07-20. */
+.fl-cell em.fl-rng, .chg-legend .cl-cell em.fl-rng{
+  font-family:var(--mono);font-size:8.5px;letter-spacing:0;text-transform:none;
+  color:var(--ink-3);font-style:normal;line-height:1.15;margin-top:-4px;white-space:nowrap}
 .chg-legend .cl-keys{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px}
 .chg-legend .cl-note{font-size:11px;color:var(--ink-3);letter-spacing:.02em}
 .cl-nd .s-nd{background:var(--ndg)}
@@ -2157,6 +2163,21 @@ function openAdjWhy() {
   if (d && !d.open) d.showModal();
 }
 
+/* Band ranges, computed FROM the thresholds so the printed numbers can never drift
+   from the actual cut-points. Shares print as %, changes print as signed percentage
+   points. 2026-07-20. */
+const pctNum = (v) => (v * 100).toFixed(1).replace(/\.0$/, '');
+const ptNum = (v) => ((v > 0 ? '+' : '') + (v * 100).toFixed(1).replace(/\.0$/, ''));
+const bandRange = (arr, i, fmt, lowWord, highWord, joiner) => {
+  const lo = i === 0 ? null : arr[i - 1].hi;
+  const hi = arr[i].hi;
+  if (lo == null) return `${lowWord} ${fmt(hi)}`;
+  if (!isFinite(hi)) return `${highWord} ${fmt(lo)}`;
+  return `${fmt(lo)}${joiner}${fmt(hi)}`;
+};
+const rampRange = (i) => bandRange(RAMP, i, (v) => pctNum(v) + '%', 'under', 'over', '\u2013');
+const chgRange = (i) => bandRange(CHGRAMP, i, ptNum, 'below', 'above', ' to ');
+
 function buildLegend() {
   // Each band is a labelled, clickable cell: the swatch, and its plain-language band
   // name beneath, so the reader sees parity is the FOURTH band, not the middle,
@@ -2164,11 +2185,12 @@ function buildLegend() {
   // EVERY .fl-bar is filled, not just the first: the registration section carries the
   // same scale, so it must carry the identical legend. The band captions are neutral
   // ("fewer women", "about equal"), so they read correctly for votes and for the roll.
-  const html = RAMP.map((b) =>
+  const html = RAMP.map((b, i) =>
     `<span class="fl-cell">` +
     `<button class="fl-b ${b.cls}" data-bin-btn="${b.cls}" aria-pressed="false" ` +
-      `title="${b.label}, click to isolate"><span class="vh">${b.label}</span></button>` +
-    `<em class="fl-cap">${b.short}</em></span>`
+      `title="${b.label} (${rampRange(i)}), click to isolate">` +
+      `<span class="vh">${b.label}</span></button>` +
+    `<em class="fl-cap">${b.short}</em><em class="fl-rng">${rampRange(i)}</em></span>`
   ).join('');
   const bars = document.querySelectorAll('.fl-bar');
   if (!bars.length) return;
@@ -2465,13 +2487,27 @@ const CHGLUT = CHG ? {
 // women worsened (orange), the same hues the turnout maps use. A null change
 // (no comparable 2018 data) draws grey (nd).
 const CHGRAMP = [
-  { cls: 'dp3', hi: -0.08 },
-  { cls: 'dp2', hi: -0.03 },
-  { cls: 'dp1', hi: 0.00 },
-  { cls: 'dm1', hi: 0.03 },
-  { cls: 'dm2', hi: 0.08 },
-  { cls: 'dm3', hi: Infinity },
+  { cls: 'dp3', hi: -0.08, short: 'fell most' },
+  { cls: 'dp2', hi: -0.03, short: 'fell' },
+  { cls: 'dp1', hi: 0.00, short: 'fell slightly' },
+  { cls: 'dm1', hi: 0.03, short: 'rose slightly' },
+  { cls: 'dm2', hi: 0.08, short: 'rose' },
+  { cls: 'dm3', hi: Infinity, short: 'rose most' },
 ];
+/* the change legend already exists as six labelled cells in the template; this only
+   appends each band's numeric range, taken from CHGRAMP itself so the printed numbers
+   are the same thresholds the map colours by and cannot drift. 2026-07-20. */
+function buildChgLegend() {
+  const cells = document.querySelectorAll('.chg-legend .cl-cell');
+  if (cells.length !== CHGRAMP.length) return;
+  cells.forEach((cell, i) => {
+    if (cell.querySelector('.fl-rng')) return;
+    const em = document.createElement('em');
+    em.className = 'fl-rng';
+    em.textContent = chgRange(i);
+    cell.appendChild(em);
+  });
+}
 const chgBin = (c) => (c == null ? 'nd' : CHGRAMP.find((b) => c < b.hi).cls);
 // the change map follows the SAME raw/adjusted toggle as the level maps: adjusted
 // uses the shipped change (chg), raw uses the change in the plain vote share (chgr).
@@ -3048,7 +3084,7 @@ function wireWand() {
 /* ================= boot ================= */
 function boot() {
   if (CMP) { drawCompare(); wireCompare(); wireProvZoom(); }
-  if (CHG) { drawChange(); wireChange(); wireZoom(); }
+  if (CHG) { drawChange(); wireChange(); wireZoom(); buildChgLegend(); }
   wirePalette(); wireCounters(); wireWand();
   renderTable();
 
