@@ -1141,6 +1141,16 @@ footer .todo{color:var(--bad);font-size:11.5px}
 .fl-cell em.fl-rng, .chg-legend .cl-cell em.fl-rng{
   font-family:var(--mono);font-size:8.5px;letter-spacing:0;text-transform:none;
   color:var(--ink-3);font-style:normal;line-height:1.15;margin-top:-4px;white-space:nowrap}
+
+/* Legend surface (2026-07-20). The pale "about equal" band (#ece6d5) is nearly the
+   page background (#ece0d0), so it dissolved into the page. The legend now sits on its
+   own lighter panel, and the band bar carries a hairline outline, so every band keeps a
+   visible edge on any background and in either theme. */
+.fuchsia-legend, .chg-legend{
+  background:var(--bg-2);border:1px solid var(--rule);border-radius:12px;
+  padding:16px 20px;width:fit-content;max-width:100%;
+  margin-inline:auto;box-sizing:border-box}
+.fl-bar, .chg-legend .cl-bar{box-shadow:0 0 0 1px var(--rule)}
 .chg-legend .cl-keys{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px}
 .chg-legend .cl-note{font-size:11px;color:var(--ink-3);letter-spacing:.02em}
 .cl-nd .s-nd{background:var(--ndg)}
