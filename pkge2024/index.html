@@ -1474,6 +1474,80 @@ footer .todo{color:var(--bad);font-size:11.5px}
      carried model-free by the hero chart at the top (province ratios), so this
      section was redundant as well as allocation-dependent. -->
 
+<!-- THIRD SECTION (2026-07-20, reviewer request): the electoral roll itself.
+     Female share of registered voters per constituency, 2018 and 2024, taken RAW as
+     Rf/(Rf+Rm) with no adjustment, on the same parity scale and the same colours as
+     the maps above. Both years and both tiers already carry rf/rm in the payload, so
+     this needs no pipeline change. The maps share the Assembly and province filters
+     with the sections above (the buttons carry the same data-attributes). -->
+<section id="registration">
+  <div class="wrap">
+    <div class="sechead">
+      <p class="eyebrow">Registration &middot; 2018 and 2024</p>
+      <h2>Who is on the electoral roll</h2>
+      <p class="lede">Before anyone votes, the roll itself is uneven. These two maps show the
+        <b>female share of registered voters</b> in every constituency, taken straight from the
+        registered counts, on the same scale as the maps above: 0.5 is parity. This is the
+        denominator everything else is measured against.</p>
+    </div>
+
+    <div class="controls">
+      <div class="grp"><label>Assembly</label>
+        <div class="seg" id="rtierbar" data-on="0" role="group" aria-label="Assembly tier">
+          <button data-ctier-btn="national" aria-pressed="true">National</button>
+          <button data-ctier-btn="provincial" aria-pressed="false">Provincial</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="provbar" role="group" aria-label="Zoom both registration maps to a province">
+      <button class="pchip" data-cprov-btn="ALL" aria-pressed="true">All Pakistan</button>
+      <button class="pchip" data-cprov-btn="PUNJAB" aria-pressed="false">Punjab</button>
+      <button class="pchip" data-cprov-btn="SINDH" aria-pressed="false">Sindh</button>
+      <button class="pchip" data-cprov-btn="KP" aria-pressed="false">Khyber Pakhtunkhwa</button>
+      <button class="pchip" data-cprov-btn="BALOCHISTAN" aria-pressed="false">Balochistan</button>
+      <button class="pchip" data-cprov-btn="ICT" aria-pressed="false">Islamabad</button>
+    </div>
+
+    <div class="twomaps" data-view="both">
+      <figure class="cmpmap" data-year="18">
+        <figcaption><span class="yr">2018</span> Electoral roll</figcaption>
+        <div class="mapzoom" role="group" aria-label="Zoom the 2018 registration map">
+          <button type="button" class="mz-out" aria-label="Zoom out">&minus;</button>
+          <button type="button" class="mz-reset">Reset</button>
+          <button type="button" class="mz-in" aria-label="Zoom in">+</button>
+        </div>
+        <svg class="dmap" data-year="18" data-metric="reg" role="img"
+          aria-label="Constituencies shaded by the female share of registered voters, 2018"></svg>
+      </figure>
+      <figure class="cmpmap" data-year="24">
+        <figcaption><span class="yr">2024</span> Electoral roll</figcaption>
+        <div class="mapzoom" role="group" aria-label="Zoom the 2024 registration map">
+          <button type="button" class="mz-out" aria-label="Zoom out">&minus;</button>
+          <button type="button" class="mz-reset">Reset</button>
+          <button type="button" class="mz-in" aria-label="Zoom in">+</button>
+        </div>
+        <svg class="dmap" data-year="24" data-metric="reg" role="img"
+          aria-label="Constituencies shaded by the female share of registered voters, 2024"></svg>
+      </figure>
+    </div>
+
+    <div class="scale">
+      <div class="fuchsia-legend">
+        <span class="fl-barrow">
+          <span class="fl-bar" role="group"
+            aria-label="Filter the registration maps to one band"></span>
+          <button class="fl-clear" data-bin-clear hidden>&times;&nbsp;Show all</button>
+        </span>
+        <span class="fl-keys">
+          <span class="fl-nd"><i class="gap-sw"></i>no data (hover for the reason)</span>
+          <span class="fl-nd"><i class="hatch-sw"></i>no election held</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="table">
   <div class="wrap">
     <div class="sechead">
@@ -1890,6 +1964,12 @@ const RAMP = [
   { cls: 'pa', hi: Infinity, label: 'more women voted', short: 'more women' },
 ];
 const shareBin = (s) => (s == null ? 'gap' : RAMP.find((b) => s < b.hi).cls);
+// The REGISTRATION measure (2026-07-20): the female share of the registered roll,
+// straight from the raw registered counts, Rf/(Rf+Rm). It is a raw quantity with no
+// adjusted counterpart (the roll IS the denominator everything else is adjusted by),
+// so a registration map does not move when the raw/adjusted toggle is flipped. Same
+// 0.5-parity scale and the same colours as the other maps; nothing is rescaled.
+const regShare = (x) => ((x.rf && x.rm) ? x.rf / (x.rf + x.rm) : null);
 const binLabel = (c) => (c === 'gap' ? 'no data'
   : (RAMP.find((b) => b.cls === c) || {}).label);
 // The map measure (2026-07-20). DEFAULT is the RAW gap: women's plain share of the
@@ -1979,11 +2059,19 @@ function buildCmpMap(svgEl) {
   // the constituency cells. Any cell we cannot measure (no reason string, or no
   // share) draws a single neutral grey (class `gap`) and states its reason on hover;
   // grey always means missing data, matching the change map. 2026-07-19.
+  // a registration map (data-metric="reg") colours by the female share of the roll and
+  // is identical under both measures, so the toggle leaves it alone. 2026-07-20.
+  const metric = svgEl.dataset.metric || 'part';
   seats.forEach((x) => {
     // both bands are computed and stored, so the measure toggle can repaint without
     // rebuilding the map (which would reset the camera). 2026-07-20.
-    const bAdj = (x.nd || x.s == null) ? 'gap' : shareBin(x.s);
-    const bRaw = (x.nd || rawShare(x) == null) ? 'gap' : shareBin(rawShare(x));
+    let bAdj, bRaw;
+    if (metric === 'reg') {
+      bAdj = bRaw = (regShare(x) == null) ? 'gap' : shareBin(regShare(x));
+    } else {
+      bAdj = (x.nd || x.s == null) ? 'gap' : shareBin(x.s);
+      bRaw = (x.nd || rawShare(x) == null) ? 'gap' : shareBin(rawShare(x));
+    }
     const p = add(x.d, 'dist ' + (adj ? bAdj : bRaw));
     p.dataset.badj = bAdj;
     p.dataset.braw = bRaw;
@@ -2070,17 +2158,21 @@ function openAdjWhy() {
 }
 
 function buildLegend() {
-  const bar = $('cbins');
-  if (!bar) return;
   // Each band is a labelled, clickable cell: the swatch, and its plain-language band
   // name beneath, so the reader sees parity is the FOURTH band, not the middle,
   // instead of inferring it from the two end labels. 2026-07-20.
-  bar.innerHTML = RAMP.map((b) =>
+  // EVERY .fl-bar is filled, not just the first: the registration section carries the
+  // same scale, so it must carry the identical legend. The band captions are neutral
+  // ("fewer women", "about equal"), so they read correctly for votes and for the roll.
+  const html = RAMP.map((b) =>
     `<span class="fl-cell">` +
     `<button class="fl-b ${b.cls}" data-bin-btn="${b.cls}" aria-pressed="false" ` +
       `title="${b.label}, click to isolate"><span class="vh">${b.label}</span></button>` +
     `<em class="fl-cap">${b.short}</em></span>`
   ).join('');
+  const bars = document.querySelectorAll('.fl-bar');
+  if (!bars.length) return;
+  bars.forEach((bar) => { bar.innerHTML = html; });
   document.querySelectorAll('[data-bin-btn]').forEach((el) =>
     el.addEventListener('click', () => setBin(el.dataset.binBtn)));
 }
@@ -2151,7 +2243,10 @@ function drawCompare() {
     `2018: <b>${nf(n(CMP.seats2018))}</b> constituencies measured`;
   document.querySelectorAll('[data-ctier-btn]').forEach((b) =>
     b.setAttribute('aria-pressed', String(b.dataset.ctierBtn === ctier)));
-  $('ctierbar').dataset.on = ctier === 'provincial' ? '1' : '0';
+  // both Assembly toggles (participation section and registration section) share
+  // one state, so both pills must follow it. 2026-07-20.
+  document.querySelectorAll('#ctierbar, #rtierbar').forEach((el) => {
+    el.dataset.on = ctier === 'provincial' ? '1' : '0'; });
   document.querySelectorAll('[data-cprov-btn]').forEach((b) =>
     b.setAttribute('aria-pressed', String(b.dataset.cprovBtn === cprov)));
 }
@@ -2179,12 +2274,23 @@ function wireCompare() {
 
   /* Build the tooltip's contents for one cell. Hover and keyboard focus both come
      through here, so the two can never drift apart. */
-  const fillTip = (p, lut, y24) => {
+  const fillTip = (p, lut, y24, metric) => {
     const x = lut.get(p.dataset.id);
     if (!x) return false;
     // `|| p.dataset.id` printed the id twice on the 9 unnamed seats. An unnamed
     // seat gets no name here rather than an echo of its own label.
     const name = y24 ? (SEATS.get(p.dataset.id)?.name || '') : (x.name || '');
+    // a registration map reports the roll itself, not the vote. 2026-07-20.
+    if (metric === 'reg') {
+      const rv = regShare(x);
+      tip.innerHTML = `<b>${p.dataset.id}</b> ${name} · ${y24 ? '2024' : '2018'}` + (rv == null
+        ? `<br><span class="muted">No registered-voter figures recorded for this constituency.</span>`
+        : `<div class="tw-lead"><b>${pct(rv)}</b> · women's share of the registered roll</div>
+           <div class="tw-row"><span class="tw-k">Registered women</span>${nf(x.rf)}</div>
+           <div class="tw-row"><span class="tw-k">Registered men</span>${nf(x.rm)}</div>`);
+      tip.hidden = false;
+      return true;
+    }
     // grey means missing: a cell with a reason states it; a bare no-share cell gets
     // the honest generic; otherwise the participation box. 2026-07-19. The counts are
     // the votes at WOMEN-only and MEN-only stations, the only figures we used; the
@@ -2218,9 +2324,10 @@ function wireCompare() {
   document.querySelectorAll('.dmap:not(.distmap)').forEach((svgEl) => {
     const y24 = svgEl.dataset.year === '24';
     const lut = y24 ? CMP24 : CMP18;
+    const mtr = svgEl.dataset.metric || 'part';
     svgEl.addEventListener('pointerover', (e) => {
       const p = e.target.closest('.dist');
-      if (p) fillTip(p, lut, y24);
+      if (p) fillTip(p, lut, y24, mtr);
     });
     svgEl.addEventListener('pointermove', (e) => placeTip(e.clientX, e.clientY));
     svgEl.addEventListener('pointerout', () => { tip.hidden = true; });
@@ -2238,7 +2345,7 @@ function wireCompare() {
       // cell's own box since there is no pointer to follow.
       svgEl.addEventListener('focusin', (e) => {
         const p = e.target.closest('.dist');
-        if (!p || !fillTip(p, lut, y24)) return;
+        if (!p || !fillTip(p, lut, y24, mtr)) return;
         const r = p.getBoundingClientRect();
         placeTip(r.left + r.width / 2, r.bottom);
       });
